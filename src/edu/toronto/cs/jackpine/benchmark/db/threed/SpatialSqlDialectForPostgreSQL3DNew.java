@@ -415,7 +415,8 @@ public String getSelectLineOverlapsLine3Dvs3D() {
 public String getSelectLineOverlapsLine3Dvs3D() {
     return "SELECT \n" +
            "    rr3d.fid AS road_id,\n" +
-           "    rc.ogc_fid AS california_gml_id\n" +
+           "    rc.ogc_fid AS california_gml_id,\n" +
+           "    ST_3DIntersects(rr3d.geom, rc.lod1solid) AS overlaps\n" +
            "FROM \n" +
            "    arealm3d rr3d\n" +
            "JOIN \n" +
@@ -423,6 +424,7 @@ public String getSelectLineOverlapsLine3Dvs3D() {
            "ON \n" +
            "    ST_3DIntersects(rr3d.geom, rc.lod1solid);";
 }
+
 
 @Override
 public String getSelectBuildingFullyWithinArea3d() {
@@ -493,9 +495,13 @@ public String getClosestPointAreaQuery() {
            "    ST_3DClosestPoint(rr3d.geom, rc.lod1solid) AS closest_point\n" +
            "FROM \n" +
            "    arealm3d rr3d\n" +
-           "CROSS JOIN \n" +
-           "    riversidecounty rc;";
+           "JOIN \n" +
+           "    riversidecounty rc\n" +
+           "ON ST_3DIntersects(rr3d.geom, rc.lod1solid);";
 }
+
+
+
 
 @Override
 public String getShortestLineAreaQuery() {
@@ -505,8 +511,9 @@ public String getShortestLineAreaQuery() {
            "    ST_3DShortestLine(rr3d.geom, rc.lod1solid) AS shortest_line\n" +
            "FROM \n" +
            "    arealm3d rr3d\n" +
-           "CROSS JOIN \n" +
-           "    riversidecounty rc;";
+           "JOIN \n" +
+           "    riversidecounty rc\n" +
+           "ON ST_3DIntersects(rr3d.geom, rc.lod1solid);";
 }
 
 @Override
@@ -517,22 +524,24 @@ public String getLongestLineAreaQuery() {
            "    ST_3DLongestLine(rr3d.geom, rc.lod1solid) AS longest_line\n" +
            "FROM \n" +
            "    arealm3d rr3d\n" +
-           "CROSS JOIN \n" +
-           "    riversidecounty rc;";
+           "JOIN \n" +
+           "    riversidecounty rc\n" +
+           "ON ST_3DIntersects(rr3d.geom, rc.lod1solid);";
 }
+
 
 @Override
 public String getLineInterpolatePointAreaQuery() {
     return "SELECT \n" +
            "    rr3d.fid AS road_id,\n" +
            "    rc.ogc_fid AS california_gml_id,\n" +
-           "    ST_3DLineInterpolatePoint(rr3d.geom, 0.5) AS interpolated_point\n" +  // Using 0.5 as an example for interpolation
+           "    ST_3DLineInterpolatePoint(ST_ExteriorRing(rr3d.geom), 0.5) AS interpolated_point\n" +
            "FROM \n" +
            "    arealm3d rr3d\n" +
-           "CROSS JOIN \n" +
-           "    riversidecounty rc;";
+           "JOIN \n" +
+           "    riversidecounty rc\n" +
+           "ON ST_3DIntersects(rr3d.geom, rc.lod1solid);";
 }
-
 
 
 

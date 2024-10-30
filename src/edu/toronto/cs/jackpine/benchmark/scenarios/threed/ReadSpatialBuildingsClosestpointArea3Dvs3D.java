@@ -31,7 +31,7 @@ public class ReadSpatialBuildingsClosestpointArea3Dvs3D extends SpatialScenarioB
         this.conn = helper3D.getConnection();
         SpatialSqlDialect3D dialect = helper3D.getSpatialSqlDialect3D();
 
-        String sql = dialect.getSelectBuildingsDifferenceArea3Dvs3D();
+        String sql = dialect.getClosestPointAreaQuery();
         pstmtArray = new PreparedStatement[]{conn.prepareStatement(sql)};
         
         logger.info("Prepared statement created: " + sql);

@@ -4,21 +4,25 @@ import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatial3DDistance3
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatial3DUnion;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatial3DUnionvs3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialArea3D;
-import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialClosestPoint3D;
+import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialBuildingsClosestpointArea3Dvs3D;
+import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialBuildingsInterpolatepointArea3Dvs3D;
+import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialBuildingsLongestLineArea3Dvs3D;
+//import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialClosestPoint3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLength3D;
-import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineContainsVolume3D;
-import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineCoveredByVolume3D;
-import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineCrossesLine3D;
-import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineCrossesRegion3D;
+//import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineContainsVolume3D;
+//import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineCoveredByVolume3D;
+//import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineCrossesLine3D;
+//import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineCrossesRegion3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineEqualsLine3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineEqualsLine3Dvs3D;
-import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineIntersectsVolume3D;
+//import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineIntersectsVolume3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineOverlapsLine3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialBuildingsOverlapsArea3Dvs3D;
-import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineWithinRegion3D;
-import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineWithinVolume3D;
-import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLongestLine3D;
-import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialPointCoveredByRegion3D;
+import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialBuildingsShortestLineArea3Dvs3D;
+/*import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineWithinRegion3D;
+import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineWithinVolume3D;*/
+//import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLongestLine3D;
+/*import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialPointCoveredByRegion3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialPointEqualsPoint3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialPointIntersectsLine3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialPointWithinRegion3D;
@@ -30,15 +34,15 @@ import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialRegionCover
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialRegionCoversLine3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialRegionCoversPoint3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialRegionCoversRegion3D;
-import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialRegionCrossesVolume3D;
-import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialRegionEqualsRegion3D;
-import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialRegionIntersectsVolume3D;
+import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialRegionCrossesVolume3D;*/
+//import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialRegionEqualsRegion3D;
+/*import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialRegionIntersectsVolume3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialRegionWithinVolume3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialShortestLine3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialVolumeContainsLine3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialVolumeContainsRegion3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialVolumeCoversLine3D;
-import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialVolumeCoversRegion3D;
+import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialVolumeCoversRegion3D;*/
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialprimeter3D;
 
 import org.apache.log4j.Logger;
@@ -98,19 +102,30 @@ public class JackpineBenchmark3DLauncherAllScenarios {
               
               
               
-     //         scenarios.add(new ReadSpatialBuildingsOverlapsArea3Dvs3D(properties));  //*1
+              scenarios.add(new ReadSpatialBuildingsOverlapsArea3Dvs3D(properties));  //*1
               
     //          scenarios.add(new ReadSpatialLineEqualsLine3Dvs3D(properties));
               
     //          scenarios.add(new ReadSpatial3DUnionvs3D(properties)); 
               
-              scenarios.add(new ReadSpatialArea3D(properties));  //*2
+    //         scenarios.add(new ReadSpatialArea3D(properties));  //*2
               
-              scenarios.add(new ReadSpatialprimeter3D(properties));  //*3
+    //          scenarios.add(new ReadSpatialprimeter3D(properties));  //*3
               
-              scenarios.add(new ReadSpatialLength3D(properties));  //*3
+     //         scenarios.add(new ReadSpatialLength3D(properties));  //*3
               
-              scenarios.add(new ReadSpatial3DDistance3D(properties));  //*4
+     //         scenarios.add(new ReadSpatial3DDistance3D(properties));  //*4
+              
+     //         scenarios.add(new ReadSpatialBuildingsClosestpointArea3Dvs3D(properties));  //*5
+              
+      //        scenarios.add(new ReadSpatialBuildingsLongestLineArea3Dvs3D(properties));  //*6
+              
+     //         scenarios.add(new ReadSpatialBuildingsShortestLineArea3Dvs3D(properties));  //*7
+
+     //         scenarios.add(new ReadSpatialBuildingsInterpolatepointArea3Dvs3D(properties));  //*8
+
+
+
 
 
 
@@ -130,23 +145,17 @@ public class JackpineBenchmark3DLauncherAllScenarios {
             
      /*       scenarios.add(new ReadSpatialLineWithinRegion3D(properties));
             scenarios.add(new ReadSpatialLineWithinVolume3D(properties));
-            scenarios.add(new ReadSpatialPointCoveredByRegion3D(properties));    //not available 
       //    scenarios.add(new ReadSpatialPointEqualsPoint3D(properties));
             scenarios.add(new ReadSpatialPointIntersectsLine3D(properties));
             
             scenarios.add(new ReadSpatialRegionContainsPoint3D(properties));
-            scenarios.add(new ReadSpatialRegionCoveredByRegion3D(properties));     //not available
-            scenarios.add(new ReadSpatialRegionCoveredByVolume3D(properties));     //not available
-            scenarios.add(new ReadSpatialRegionCoversLine3D(properties));          //not available 
-            scenarios.add(new ReadSpatialRegionCoversRegion3D(properties));        //not available 
-            
+
+         
           //scenarios.add(new ReadSpatialRegionEqualsRegion3D(properties));
           //scenarios.add(new ReadSpatialRegionIntersectsVolume3D(properties));
             scenarios.add(new ReadSpatialVolumeContainsLine3D(properties));
             scenarios.add(new ReadSpatialVolumeContainsRegion3D(properties));
-            scenarios.add(new ReadSpatialVolumeCoversLine3D(properties));          //not available 
             
-            scenarios.add(new ReadSpatialVolumeCoversRegion3D(properties));       //not available 
 
 
 
