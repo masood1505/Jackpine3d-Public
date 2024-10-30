@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="lib/bristlecone.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/ifxjdbc.jar"/>
+	<classpathentry kind="lib" path="lib/iijdbc.jar"/>
+	<classpathentry kind="lib" path="lib/jackpine_custom.jar"/>
+	<classpathentry kind="lib" path="lib/jcommon-1.0.15.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart-1.0.12.jar"/>
+	<classpathentry kind="lib" path="lib/jgroups-all.jar"/>
+	<classpathentry kind="lib" path="lib/jline-0.9.94.jar"/>
+	<classpathentry kind="lib" path="lib/junit.jar"/>
+	<classpathentry kind="lib" path="lib/log4j.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.0.8-bin.jar"/>
+	<classpathentry kind="lib" path="lib/postgresql-42.7.3(1).jar"/>
+	<classpathentry kind="lib" path="lib/postgresql-8.0.309.jdbc3.jar"/>
+	<classpathentry kind="lib" path="lib/spatial.jar"/>
+	<classpathentry kind="lib" path="lib/tungsten-commons.jar"/>
+	<classpathentry kind="lib" path="lib/tungsten-fsm-0.5.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

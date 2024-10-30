@@ -115,6 +115,14 @@ public class SpatialSqlDialectForIngres extends SqlDialectForIngres implements S
 	  return sql;
  }
  
+ public String getSelectLongestLine3D() {
+     // Ingres may not directly support 3D distance calculations,
+     // so this is a hypothetical SQL and may need to be adjusted or implemented differently.
+     return "SELECT id1, id2, MAX(length) as maxLength FROM (" +
+            "SELECT id1, id2, ST_Length(geom) as length FROM geometries" +
+            ") as subquery GROUP BY id1, id2";
+ }
+ 
  //didn't work, now works
  public String getSelectLongestLine(){
 	  StringBuffer sb = new StringBuffer();
@@ -711,5 +719,460 @@ public class SpatialSqlDialectForIngres extends SqlDialectForIngres implements S
 		
 	return queries;
  }
-  
+
+
+@Override
+public String getPoint3DString(double x, double y, double z) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getBox3DString(double d, double e, double f, double g, double h, double i) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getCityStateForReverseGeocoding3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getStreetAddressForReverseGeocoding3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectBuffer3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectClosestPoint3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectContains3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectConvexHull3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectCrosses3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectDistance3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectReadSpatialLongestLine3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectReadSpatialBufferPolygon3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectShortestLine3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectMaxDistance3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectLength3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectDistanceWithin3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectDWithin3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectFullyWithin3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectIntersects3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectIs3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectVolumeContainsLine3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectVolumeContainsRegion3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectRegionInsideVolume3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectRegionCrossesVolume3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectRegionIntersectsVolume3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectLineIntersectsVolume3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectLineWithinVolume3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectLineContainsVolume3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelect3DRegionContainsRegion() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelect3DRegionEqualsRegion() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelect3DRegionContainsLine() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelect3DLineCrossesRegion() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelect3DLineWithinRegion() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelect3DPointWithinRegion() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelect3DLineEqualsLine() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelect3DLineCrossesLine() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelect3DPointEqualsPoint() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelect3DPointIntersectsLine() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectLineOverlapsLine3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectRegionContainsPoint3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectRegionCoversPoint3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectRegionCoversLine3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectRegionCoversRegion3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectVolumeCoversLine3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectVolumeCoversRegion3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectPointCoveredByRegion3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectRegionCoveredByRegion3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectLineCoveredByVolume3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectRegionCoveredByVolume3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+/*
+@Override
+public String getSelectBuffer3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectClosestPoint3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectContains3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectConvexHull3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectCrosses3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectDistance3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectReadSpatialLongestLine3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectReadSpatialBufferPolygon3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectShortestLine3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectMaxDistance3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectLength3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectDistanceWithin3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectDWithin3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectFullyWithin3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectIntersects3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
+@Override
+public String getSelectIs3D() {
+	// TODO Auto-generated method stub
+	return null;
+}
+  */
 }

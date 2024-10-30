@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import edu.toronto.cs.jackpine.benchmark.db.threed.SpatialSqlDialectForPostgreSQL3DNew;
 import edu.toronto.cs.jackpine.benchmark.scenarios.EnvHazardMacroScenario;
 
 /**
@@ -50,6 +51,10 @@ public class SpatialSqlDialectFactory
     al.add(new SpatialSqlDialectForIngres());
     al.add(new SpatialSqlDialectForMysql());
     al.add(new SpatialSqlDialectForPostgreSQL());
+   // al.add(new SpatialSqlDialectForPostgreSQL());
+
+    
+    //al.add(new SpatialSqlDialectForPostgreSQL3DNew());
  
     dialects = al;
   }

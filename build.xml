@@ -1,47 +1,58 @@
-<project>
+<project name="jackpine" default="run" basedir=".">
+    <!-- Initialize properties -->
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="jar.dir" value="${build.dir}/jar"/>
+    <property name="main-class" value="edu.toronto.cs.jackpine.benchmark.JackpineBenchmark3DLauncher"/>
 
+    <!-- Create the build directory structure -->
+    <target name="init">
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${jar.dir}"/>
+    </target>
+
+    <!-- Clean the build directory -->
     <target name="clean">
-        <delete dir="build"/>
+        <delete dir="${build.dir}"/>
     </target>
 
-    <target name="compile">
-        <mkdir dir="build/classes"/>
-	<javac srcdir="src" destdir="build/classes">
-		<classpath>
-			<pathelement path="lib/jbl.jar"/>
-			<pathelement path="lib/bristlecone.jar"/>
-                        <pathelement path="lib/commons-logging-1.1.1.jar"/>
-                        <pathelement path="lib/commons-logging.jar"/>
-                        <pathelement path="lib/dom4j-1.6.1.jar"/>
-                        <pathelement path="lib/ifxjdbc.jar"/>
-                        <pathelement path="lib/iijdbc.jar"/>
-                        <pathelement path="lib/jackpine1_0.jar"/>
-                        <pathelement path="lib/jcommon-1.0.15.jar"/>
-                        <pathelement path="lib/jfreechart-1.0.12.jar"/>
-                        <pathelement path="lib/jgroups-all.jar"/>
-                        <pathelement path="lib/jline-0.9.94.jar"/>
-                        <pathelement path="lib/junit.jar"/>
-                        <pathelement path="lib/log4j.jar"/>
-                        <pathelement path="lib/mysql-connector-java-5.0.8-bin.jar"/>
-                        <pathelement path="lib/postgresql-8.0.309.jdbc3.jar"/>
-                        <pathelement path="lib/spatial.jar"/>
-                        <pathelement path="lib/tungsten-commons.jar"/>
-                        <pathelement path="lib/tungsten-fsm-0.5.jar"/>
-		</classpath>
-	</javac>
+    <!-- Compile the source code -->
+    <target name="compile" depends="init">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false">
+            <classpath>
+                <fileset dir="${lib.dir}" includes="**/*.jar"/>
+            </classpath>
+        </javac>
     </target>
 
-    <target name="jar">
-        <mkdir dir="lib"/>
-	<jar destfile="lib/jackpine_custom.jar" basedir="build/classes">
+    <!-- Copy the properties files to the classes directory -->
+    <target name="copy-properties" depends="compile">
+        <copy file="log4j.properties" todir="${classes.dir}"/>
+        <copy file="connection_general.properties" todir="${classes.dir}"/>
+    </target>
+
+    <!-- Create the jar file -->
+    <target name="jar" depends="copy-properties">
+        <jar destfile="${jar.dir}/jackpine.jar" basedir="${classes.dir}">
             <manifest>
-                <attribute name="Main-Class" value="edu.toronto.cs.jackpine.benchmark.JackpineBenchmarkLauncher.java"/>
+                <attribute name="Main-Class" value="${main-class}"/>
             </manifest>
         </jar>
     </target>
+	
+	
 
-    <target name="run">
-        <java jar="lib/jackpine_custom.jar" fork="true"/>
-    </target>
+    <!-- Run the application -->
+	<target name="run" depends="jar">
+	    <java fork="true" classname="${main-class}">
+	        <classpath>
+	            <pathelement path="${jar.dir}/jackpine.jar"/>
+	            <fileset dir="${lib.dir}" includes="**/*.jar"/>
+	        </classpath>
+	        <sysproperty key="java.class.path" value="${java.class.path}"/>
+	    </java>
+	</target>
 
 </project>
