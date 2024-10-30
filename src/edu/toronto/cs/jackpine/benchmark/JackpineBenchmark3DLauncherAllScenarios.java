@@ -14,7 +14,7 @@ import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineEqualsL
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineEqualsLine3Dvs3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineIntersectsVolume3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineOverlapsLine3D;
-import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineOverlapsLine3Dvs3D;
+import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialBuildingsOverlapsArea3Dvs3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineWithinRegion3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLineWithinVolume3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ReadSpatialLongestLine3D;
@@ -98,7 +98,7 @@ public class JackpineBenchmark3DLauncherAllScenarios {
               
               
               
-     //         scenarios.add(new ReadSpatialLineOverlapsLine3Dvs3D(properties));  //*1
+     //         scenarios.add(new ReadSpatialBuildingsOverlapsArea3Dvs3D(properties));  //*1
               
     //          scenarios.add(new ReadSpatialLineEqualsLine3Dvs3D(properties));
               

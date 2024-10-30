@@ -12,14 +12,14 @@ import edu.toronto.cs.jackpine.benchmark.db.threed.SpatialSqlDialect3D;
 import edu.toronto.cs.jackpine.benchmark.db.threed.SpatialTableHelper3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.SpatialScenarioBase;
 
-public class ReadSpatialLineOverlapsLine3Dvs3D extends SpatialScenarioBase {
+public class ReadSpatialConvexHallArea3D extends SpatialScenarioBase {
     private static final Logger logger = Logger.getLogger(ReadSpatialLineOverlapsLine3D.class);
 
     private PreparedStatement[] pstmtArray;
     private Connection conn;
     private SpatialTableHelper3D helper3D;
 
-    public ReadSpatialLineOverlapsLine3Dvs3D(Properties props) {
+    public ReadSpatialConvexHallArea3D(Properties props) {
         String url = props.getProperty("url");
         String login = props.getProperty("user");
         String password = props.getProperty("password");
@@ -31,7 +31,7 @@ public class ReadSpatialLineOverlapsLine3Dvs3D extends SpatialScenarioBase {
         this.conn = helper3D.getConnection();
         SpatialSqlDialect3D dialect = helper3D.getSpatialSqlDialect3D();
 
-        String sql = dialect.getSelectLineOverlapsLine3Dvs3D();
+        String sql = dialect.getSelectBuildingsDifferenceArea3Dvs3D();
         pstmtArray = new PreparedStatement[]{conn.prepareStatement(sql)};
         
         logger.info("Prepared statement created: " + sql);

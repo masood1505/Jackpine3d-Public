@@ -424,6 +424,121 @@ public String getSelectLineOverlapsLine3Dvs3D() {
            "    ST_3DIntersects(rr3d.geom, rc.lod1solid);";
 }
 
+@Override
+public String getSelectBuildingFullyWithinArea3d() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    rc.ogc_fid AS california_gml_id\n" +
+           "FROM \n" +
+           "    arealm3d rr3d\n" +
+           "JOIN \n" +
+           "    riversidecounty rc\n" +
+           "ON \n" +
+           "    _st_3ddfullywithin(rr3d.geom, rc.lod1solid, 0.0);"; // Hardcoded double precision value
+}
+
+
+public String getSelectBuildingIntersectionArea3Dvs3D() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    rc.ogc_fid AS california_gml_id\n" +
+           "FROM \n" +
+           "    arealm3d rr3d\n" +
+           "JOIN \n" +
+           "    riversidecounty rc\n" +
+           "ON \n" +
+           "    ST_3DIntersection(rr3d.geom, rc.lod1solid);";
+}
+
+
+@Override
+public String getSelectBuildingsDifferenceArea3Dvs3D() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    rc.ogc_fid AS california_gml_id\n" +
+           "FROM \n" +
+           "    arealm3d rr3d\n" +
+           "JOIN \n" +
+           "    riversidecounty rc\n" +
+           "ON \n" +
+           "    ST_3DDifference(rr3d.geom, rc.lod1solid);";
+}
+
+@Override
+public String get3DConvexHullAreaQuery() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    ST_3DConvexHull(rr3d.geom) AS convex_hull\n" +
+           "FROM \n" +
+           "    arealm3d rr3d;";
+}
+
+@Override
+public String get3DUnionSAreaQuery() {
+    return "SELECT \n" +
+           "    ST_3DUnion(rr3d.geom) AS unified_geom\n" +
+           "FROM \n" +
+           "    arealm3d rr3d;";
+}
+
+
+
+
+
+@Override
+public String getClosestPointAreaQuery() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    rc.ogc_fid AS california_gml_id,\n" +
+           "    ST_3DClosestPoint(rr3d.geom, rc.lod1solid) AS closest_point\n" +
+           "FROM \n" +
+           "    arealm3d rr3d\n" +
+           "CROSS JOIN \n" +
+           "    riversidecounty rc;";
+}
+
+@Override
+public String getShortestLineAreaQuery() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    rc.ogc_fid AS california_gml_id,\n" +
+           "    ST_3DShortestLine(rr3d.geom, rc.lod1solid) AS shortest_line\n" +
+           "FROM \n" +
+           "    arealm3d rr3d\n" +
+           "CROSS JOIN \n" +
+           "    riversidecounty rc;";
+}
+
+@Override
+public String getLongestLineAreaQuery() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    rc.ogc_fid AS california_gml_id,\n" +
+           "    ST_3DLongestLine(rr3d.geom, rc.lod1solid) AS longest_line\n" +
+           "FROM \n" +
+           "    arealm3d rr3d\n" +
+           "CROSS JOIN \n" +
+           "    riversidecounty rc;";
+}
+
+@Override
+public String getLineInterpolatePointAreaQuery() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    rc.ogc_fid AS california_gml_id,\n" +
+           "    ST_3DLineInterpolatePoint(rr3d.geom, 0.5) AS interpolated_point\n" +  // Using 0.5 as an example for interpolation
+           "FROM \n" +
+           "    arealm3d rr3d\n" +
+           "CROSS JOIN \n" +
+           "    riversidecounty rc;";
+}
+
+
+
+
+
+
+
 public String getSelectArea3D() {
     return "SELECT ST_3DArea(geom) \n" +
            "FROM arealm3d \n" +

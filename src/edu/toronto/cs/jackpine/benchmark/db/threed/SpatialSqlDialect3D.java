@@ -84,6 +84,24 @@ public interface SpatialSqlDialect3D {
 
 		public String getSelect3DDistance3D();
 
+		String getClosestPointAreaQuery();
+
+		String getShortestLineAreaQuery();
+
+		String getLongestLineAreaQuery();
+
+		String getLineInterpolatePointAreaQuery();
+
+		String getSelectBuildingsDifferenceArea3Dvs3D();
+
+		String get3DConvexHullAreaQuery();
+
+		String get3DUnionSAreaQuery();
+
+		public String getSelectBuildingIntersectionArea3Dvs3D();
+
+		String getSelectBuildingFullyWithinArea3d();
+
 //		String getSelectLineLongestLine3D();
     
 }

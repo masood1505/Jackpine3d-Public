@@ -433,6 +433,78 @@ public class SpatialSqlDialectForOracle3DNew implements SpatialSqlDialect3D {
 
 
 
+	@Override
+	public String getClosestPointAreaQuery() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getShortestLineAreaQuery() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getLongestLineAreaQuery() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getLineInterpolatePointAreaQuery() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getSelectBuildingsDifferenceArea3Dvs3D() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String get3DConvexHullAreaQuery() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String get3DUnionSAreaQuery() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getSelectBuildingIntersectionArea3Dvs3D() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getSelectBuildingFullyWithinArea3d() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
 }
 
 
