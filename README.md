@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## JackPine - A Geospatial Benchmark (Version 2.0)
 
 A modified code to match current PostgreSQL database versions.
@@ -46,3 +47,6 @@ If you are using this benchmark, please cite the following papers.
   organization={IEEE}
 }
 ```
+
+# Jackpine3d-Public
+ dfaf095911bbc7f2c0b3fd4005b797db6f127dd8
