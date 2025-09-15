@@ -412,7 +412,7 @@ public String getSelectLineOverlapsLine3Dvs3D() {
 }*/
 
 @Override
-public String getSelectLineOverlapsLine3Dvs3D() {
+public String getSelectArealmIntersectsBuildings3Dvs3D() {
     return "SELECT \n" +
            "    rr3d.fid AS road_id,\n" +
            "    rc.ogc_fid AS california_gml_id,\n" +
@@ -457,14 +457,20 @@ public String getSelectBuildingIntersectionArea3Dvs3D() {
 public String getSelectBuildingsDifferenceArea3Dvs3D() {
     return "SELECT \n" +
            "    rr3d.fid AS road_id,\n" +
-           "    rc.ogc_fid AS california_gml_id\n" +
+           "    rc.ogc_fid AS california_gml_id,\n" +
+           "    rc.state AS california_state,\n" +
+           "    ST_3DDifference(rr3d.geom, rc.lod1solid) AS difference_geom\n" +
            "FROM \n" +
            "    arealm3d rr3d\n" +
            "JOIN \n" +
            "    riversidecounty rc\n" +
            "ON \n" +
-           "    ST_3DDifference(rr3d.geom, rc.lod1solid);";
+           "    ST_Intersects(rr3d.geom, rc.lod1solid)  -- Replace with your actual join condition\n" +
+           "WHERE \n" +
+           "    ST_3DDifference(rr3d.geom, rc.lod1solid) IS NOT NULL;"; // This is now correctly placed
 }
+
+
 
 @Override
 public String get3DConvexHullAreaQuery() {
@@ -574,13 +580,433 @@ public String getSelect3DDistance3D() {
            "AND ST_IsValid(r.lod1solid);";
 }
 
+@Override
+public String getSelectAreaContainsBuildings3D() {
+    return "SELECT \n" +
+            "    rr3d.fid AS road_id,\n" +
+            "    rc.ogc_fid AS california_gml_id,\n" +
+            "    rc.height AS building_height\n" + // Add this line for the new column
+            "FROM \n" +
+            "    arealm3d rr3d\n" +
+            "JOIN \n" +
+            "    riversidecounty rc\n" +
+            "ON \n" +
+            "    geometry_contains_3d(rr3d.geom, rc.lod1solid);";
+}
+
+@Override
+public String getSelectArealmOverlapsBuildings3D() {
+    return "SELECT \n" +
+           "    rc.ogc_fid AS california_gml_id,\n" +
+           "    rr3d.fid AS road_id\n" +
+           "FROM \n" +
+           "    riversidecounty rc\n" +
+           "JOIN \n" +
+           "    arealm3d rr3d\n" +
+           "ON \n" +
+           "    geometry_overlaps_3d(rc.lod1solid, rr3d.geom)\n" +
+           "LIMIT 100;";
+}
 
 
 
 
 
+/* begining of line queries  */  
+
+@Override
+public String getSelectLineOverlapsLine3Dvs3DLine() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    rc.ogc_fid AS california_gml_id,\n" +
+           "    ST_3DIntersects(rr3d.geom, rc.lod1solid) AS overlaps\n" +
+           "FROM \n" +
+           "    riversideroads3d rr3d\n" +
+           "JOIN \n" +
+           "    riversidecounty rc\n" +
+           "ON \n" +
+           "    ST_3DIntersects(rr3d.geom, rc.lod1solid);";
+}
+
+@Override
+public String getSelectBuildingFullyWithinArea3DLine() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    rc.ogc_fid AS california_gml_id\n" +
+           "FROM \n" +
+           "    riversideroads3d rr3d\n" +
+           "JOIN \n" +
+           "    riversidecounty rc\n" +
+           "ON \n" +
+           "    _st_3ddfullywithin(rr3d.geom, rc.lod1solid, 0.0);"; // Hardcoded double precision value
+}
+
+@Override
+public String getSelectBuildingIntersectionArea3Dvs3DLine() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    rc.ogc_fid AS california_gml_id\n" +
+           "FROM \n" +
+           "    riversideroads3d rr3d\n" +
+           "JOIN \n" +
+           "    riversidecounty rc\n" +
+           "ON \n" +
+           "    ST_3DIntersection(rr3d.geom, rc.lod1solid);";
+}
+
+@Override
+public String getSelectBuildingsDifferenceArea3Dvs3DLine() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    rc.ogc_fid AS california_gml_id\n" +
+           "FROM \n" +
+           "    riversideroads3d rr3d\n" +
+           "JOIN \n" +
+           "    riversidecounty rc\n" +
+           "ON \n" +
+           "    ST_3DDifference(rr3d.geom, rc.lod1solid);";
+}
+
+@Override
+public String getClosestPointAreaQueryLine() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    rc.ogc_fid AS california_gml_id,\n" +
+           "    ST_3DClosestPoint(rr3d.geom, rc.lod1solid) AS closest_point\n" +
+           "FROM \n" +
+           "    riversideroads3d rr3d\n" +
+           "JOIN \n" +
+           "    riversidecounty rc\n" +
+           "ON ST_3DIntersects(rr3d.geom, rc.lod1solid);";
+}
+
+@Override
+public String getBuilding3DIntersectsLineQuery() {
+    return "SELECT \n" +
+           " rr3d.gid AS road_id,\n" +
+           " rc.ogc_fid AS california_gml_id,\n" +
+           " ST_3DIntersects(rr3d.geom, rc.lod1solid) AS overlaps\n" +
+           "FROM \n" +
+           " riversideroads3d rr3d\n" +
+           "JOIN \n" +
+           " riversidecounty rc\n" +
+           "ON ST_3DIntersects(rr3d.geom, rc.lod1solid);";
+}
+
+public String getBuilding3DIntersectsAreaQuery() {
+    return "SELECT \n" +
+           " rr3d.gid AS road_id,\n" +
+           " rc.ogc_fid AS california_gml_id,\n" +
+           " ST_3DIntersects(rr3d.geom, rc.lod1solid) AS overlaps\n" +
+           "FROM \n" +
+           " landmarkriverside3d rr3d\n" +
+           "JOIN \n" +
+           " riversidecounty rc\n" +
+           "ON ST_3DIntersects(rr3d.geom, rc.lod1solid);";
+}
+
+public String getBuilding3DDistanceLineQuery() {
+    return "EXPLAIN ANALYZE SELECT \n" +
+           " a.gid AS road_id,\n" +
+           " b.ogc_fid AS building_id,\n" +
+           " ST_3DDistance(a.geom, b.lod1solid) AS distance\n" +
+           "FROM \n" +
+           " riversideroads3d a,\n" +
+           " riversidecounty b\n" +
+           "WHERE \n" +
+           " ST_3DIntersects(a.geom, b.lod1solid);";
+}
 
 
+
+public String getBuilding3DDistanceAreaQuery() {
+    return "EXPLAIN ANALYZE SELECT \n" +
+           " l.gid AS landmark_id,\n" +
+           " rc.ogc_fid AS california_gml_id,\n" +
+           " ST_3DDistance(l.geom, rc.lod1solid) AS distance_3d\n" +
+           "FROM \n" +
+           " landmarkriverside3d l\n" +
+           "JOIN \n" +
+           " riversidenew3d rc\n" +
+           "ON ST_3DIntersects(l.geom, rc.lod1solid);";
+}
+
+public String getBuilding3DDistanceWithinBuildingQuery() {
+    return "EXPLAIN ANALYZE \n" +
+           "SELECT a.ogc_fid as id_a, b.ogc_fid as id_b,\n" +
+           "       a.gml_id as gml_id_a, b.gml_id as gml_id_b\n" +
+           "FROM riversidenew3d a\n" +
+           "JOIN riversidenew3d b ON a.ogc_fid < b.ogc_fid\n" +
+           "WHERE ST_3DDWithin(a.lod1solid, b.lod1solid, 10);";
+}
+
+public String getBoundingBox3DQuery() {
+    return "SELECT gid, Box3D(geom) AS bounding_box_3d\n" +
+           "FROM landmarkriverside3d;";
+}
+
+
+
+public String getConvexHullQuery() {
+    return "EXPLAIN ANALYZE\n" +
+           "SELECT gid, ST_ConvexHull(geom) AS convex_hull\n" +
+           "FROM landmarkriverside3d;";
+}
+
+
+public String getDimensionsQuery() {
+    return "SELECT DISTINCT ST_NDims(geom) as dimensions\n" +
+           "FROM landmarkriverside3d\n" +
+           "WHERE ST_IsValid(geom)";
+}
+
+public String getLength3DQuery() {
+    return "SELECT ST_3DLength(geom) as length_3d\n" +
+           "FROM landmarkriverside3d\n" +
+           "WHERE ST_IsValid(geom)";
+}
+
+public String getPerimeter3DQuery() {
+    return "SET TIMING ON;\n" +
+           "SELECT SDO_GEOM.SDO_LENGTH(geometry, 0.005) as perimeter_3d FROM arealm3d;\n" +
+           "SET TIMING OFF;";
+}
+
+public String getBridgeAnalysisQuery() {
+    return "EXPLAIN ANALYZE WITH selected_points AS (\n" +
+           "    SELECT latitude, longitude, 75 as elevation\n" +
+           "    FROM riversidecounty\n" +
+           "    TABLESAMPLE SYSTEM(1) REPEATABLE(12345)\n" +
+           "    LIMIT 100\n" +
+           "),\n" +
+           "bridge_analysis AS (\n" +
+           "    SELECT s.latitude, s.longitude,\n" +
+           "           COUNT(*) as connection_points,\n" +
+           "           MAX(ST_3DDistance(\n" +
+           "               ST_SetSRID(ST_MakePoint(r.longitude, r.latitude, 75), 4326),\n" +
+           "               ST_SetSRID(ST_MakePoint(s.longitude, s.latitude, s.elevation), 4326)\n" +
+           "           )) as bridge_span\n" +
+           "    FROM riversidecounty r\n" +
+           "    JOIN selected_points s ON ST_3DDWithin(\n" +
+           "        ST_SetSRID(ST_MakePoint(r.longitude, r.latitude, 75), 4326),\n" +
+           "        ST_SetSRID(ST_MakePoint(s.longitude, s.latitude, s.elevation), 4326),\n" +
+           "        100\n" +
+           "    )\n" +
+           "    GROUP BY s.latitude, s.longitude\n" +
+           ")\n" +
+           "SELECT latitude, longitude, connection_points, bridge_span\n" +
+           "FROM bridge_analysis\n" +
+           "WHERE connection_points > 5\n" +
+           "ORDER BY bridge_span DESC\n" +
+           "LIMIT 5;";
+}
+
+public String getCancerousAnalysisIntersectionQuery() {
+    return "EXPLAIN ANALYZE SELECT \n" +
+           " a.ogc_fid as cell1_id,\n" +
+           " b.ogc_fid as cell2_id,\n" +
+           " ST_3DIntersects(a.wkb_geometry, b.wkb_geometry) AS intersection_3d\n" +
+           "FROM \n" +
+           " synthetic_cells_3d a,\n" +
+           " synthetic_cells_3d b\n" +
+           "WHERE \n" +
+           " a.ogc_fid < b.ogc_fid\n" +
+           " AND ST_3DDWithin(a.wkb_geometry, b.wkb_geometry, 10)\n" +
+           "LIMIT 10000;";
+}
+
+public String getEmergencyRoutesQuery() {
+    return "EXPLAIN ANALYZE WITH selected_points AS (\n" +
+           "    SELECT latitude, longitude, 0 as elevation\n" +
+           "    FROM riversidenew3d\n" +
+           "    TABLESAMPLE SYSTEM(1) REPEATABLE(12345)\n" +
+           "    LIMIT 50\n" +
+           "),\n" +
+           "route_analysis AS (\n" +
+           "    SELECT s.latitude, s.longitude,\n" +
+           "           COUNT(*) as building_density,\n" +
+           "           MAX(ST_3DDistance(\n" +
+           "               ST_SetSRID(ST_MakePoint(r.longitude, r.latitude, 0), 4326),\n" +
+           "               ST_SetSRID(ST_MakePoint(s.longitude, s.latitude, s.elevation), 4326)\n" +
+           "           )) as clearance_radius\n" +
+           "    FROM riversidenew3d r\n" +
+           "    JOIN selected_points s ON ST_3DDWithin(\n" +
+           "        ST_SetSRID(ST_MakePoint(r.longitude, r.latitude, 0), 4326),\n" +
+           "        ST_SetSRID(ST_MakePoint(s.longitude, s.latitude, s.elevation), 4326),\n" +
+           "        100\n" +
+           "    )\n" +
+           "    GROUP BY s.latitude, s.longitude\n" +
+           ")\n" +
+           "SELECT latitude, longitude, building_density, clearance_radius\n" +
+           "FROM route_analysis\n" +
+           "ORDER BY building_density ASC, clearance_radius DESC\n" +
+           "LIMIT 5;";
+}
+
+public String getFutureExpansionQuery() {
+    return "EXPLAIN ANALYZE WITH selected_points AS (\n" +
+           "    SELECT latitude, longitude, 0 as elevation\n" +
+           "    FROM riversidenew3d\n" +
+           "    TABLESAMPLE SYSTEM(1) REPEATABLE(12345)\n" +
+           "    LIMIT 100\n" +
+           "),\n" +
+           "expansion_analysis AS (\n" +
+           "    SELECT s.latitude, s.longitude, s.elevation,\n" +
+           "           COUNT(*) as building_density,\n" +
+           "           ST_3DDistance(\n" +
+           "               ST_SetSRID(ST_MakePoint(r.longitude, r.latitude, 0), 4326),\n" +
+           "               ST_SetSRID(ST_MakePoint(s.longitude, s.latitude, s.elevation), 4326)\n" +
+           "           ) as distance_to_nearest,\n" +
+           "           AVG(ST_3DDistance(\n" +
+           "               ST_SetSRID(ST_MakePoint(r.longitude, r.latitude, 0), 4326),\n" +
+           "               ST_SetSRID(ST_MakePoint(s.longitude, s.latitude, s.elevation), 4326)\n" +
+           "           )) as avg_distance\n" +
+           "    FROM riversidenew3d r\n" +
+           "    JOIN selected_points s ON ST_3DDWithin(\n" +
+           "        ST_SetSRID(ST_MakePoint(r.longitude, r.latitude, 0), 4326),\n" +
+           "        ST_SetSRID(ST_MakePoint(s.longitude, s.latitude, s.elevation), 4326),\n" +
+           "        500\n" +
+           "    )\n" +
+           "    GROUP BY s.latitude, s.longitude, s.elevation, r.longitude, r.latitude\n" +
+           ")\n" +
+           "SELECT latitude, longitude, building_density, distance_to_nearest, avg_distance\n" +
+           "FROM expansion_analysis\n" +
+           "WHERE building_density < 50\n" +
+           "ORDER BY building_density ASC, avg_distance DESC\n" +
+           "LIMIT 5;";
+}
+
+public String getGardenAnalysisQuery() {
+    return "EXPLAIN ANALYZE WITH selected_points AS (\n" +
+           "    SELECT latitude, longitude, 100 as elevation\n" +
+           "    FROM riversidecounty\n" +
+           "    TABLESAMPLE SYSTEM(1) REPEATABLE(12345)\n" +
+           "    LIMIT 100\n" +
+           "),\n" +
+           "garden_analysis AS (\n" +
+           "    SELECT s.latitude, s.longitude,\n" +
+           "           COUNT(*) as space_score,\n" +
+           "           MIN(ST_3DDistance(\n" +
+           "               ST_SetSRID(ST_MakePoint(r.longitude, r.latitude, 100), 4326),\n" +
+           "               ST_SetSRID(ST_MakePoint(s.longitude, s.latitude, s.elevation), 4326)\n" +
+           "           )) as clear_space\n" +
+           "    FROM riversidecounty r\n" +
+           "    JOIN selected_points s ON ST_3DDWithin(\n" +
+           "        ST_SetSRID(ST_MakePoint(r.longitude, r.latitude, 100), 4326),\n" +
+           "        ST_SetSRID(ST_MakePoint(s.longitude, s.latitude, s.elevation), 4326),\n" +
+           "        150\n" +
+           "    )\n" +
+           "    GROUP BY s.latitude, s.longitude\n" +
+           ")\n" +
+           "SELECT latitude, longitude, space_score, clear_space\n" +
+           "FROM garden_analysis\n" +
+           "ORDER BY clear_space DESC\n" +
+           "LIMIT 5;";
+}
+
+public String getLength3DMedicalAnalysisQuery() {
+    return "EXPLAIN ANALYZE SELECT \n" +
+           " ogc_fid,\n" +
+           " ST_3DLength(wkb_geometry) AS perimeter_3d\n" +
+           "FROM \n" +
+           " synthetic_cells_3d;";
+}
+
+public String getPerimeter3DMedicalAnalysisQuery() {
+    return "EXPLAIN ANALYZE SELECT \n" +
+           " ogc_fid,\n" +
+           " ST_3DMaxDistance(wkb_geometry, wkb_geometry) AS max_3d_distance\n" +
+           "FROM \n" +
+           " synthetic_cells_3d;";
+}
+
+public String getSubwayStationLocationQuery() {
+    return "EXPLAIN ANALYZE WITH selected_points AS (\n" +
+           "    SELECT latitude, longitude, 0 as elevation\n" +
+           "    FROM riversidenew3d\n" +
+           "    TABLESAMPLE SYSTEM(1) REPEATABLE(12345)\n" +
+           "    LIMIT 100\n" +
+           "),\n" +
+           "point_distances AS (\n" +
+           "    SELECT s.latitude, s.longitude,\n" +
+           "           MIN(ST_3DDistance(\n" +
+           "               ST_SetSRID(ST_MakePoint(r.longitude, r.latitude, 0), 4326),\n" +
+           "               ST_SetSRID(ST_MakePoint(s.longitude, s.latitude, s.elevation), 4326)\n" +
+           "           )) as min_distance_meters\n" +
+           "    FROM riversidenew3d r\n" +
+           "    JOIN selected_points s ON ST_3DDWithin(\n" +
+           "        ST_SetSRID(ST_MakePoint(r.longitude, r.latitude, 0), 4326),\n" +
+           "        ST_SetSRID(ST_MakePoint(s.longitude, s.latitude, s.elevation), 4326),\n" +
+           "        25\n" +
+           "    )\n" +
+           "    GROUP BY s.latitude, s.longitude\n" +
+           ")\n" +
+           "SELECT latitude, longitude, min_distance_meters\n" +
+           "FROM point_distances\n" +
+           "ORDER BY min_distance_meters\n" +
+           "LIMIT 5;";
+}
+
+
+
+@Override
+public String getLongestLineAreaQueryLine() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    rc.ogc_fid AS california_gml_id,\n" +
+           "    ST_3DLongestLine(rr3d.geom, rc.lod1solid) AS longest_line\n" +
+           "FROM \n" +
+           "    riversideroads3d rr3d\n" +
+           "JOIN \n" +
+           "    riversidecounty rc\n" +
+           "ON ST_3DIntersects(rr3d.geom, rc.lod1solid);";
+}
+
+@Override
+public String getLineInterpolatePointAreaQueryLine() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    rc.ogc_fid AS california_gml_id,\n" +
+           "    ST_3DLineInterpolatePoint(ST_ExteriorRing(rr3d.geom), 0.5) AS interpolated_point\n" +
+           "FROM \n" +
+           "    riversideroads3d rr3d\n" +
+           "JOIN \n" +
+           "    riversidecounty rc\n" +
+           "ON ST_3DIntersects(rr3d.geom, rc.lod1solid);";
+}
+
+@Override
+public String getSelectLineIsContainedBuilding3D() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    rc.ogc_fid AS california_gml_id\n" +
+           "FROM \n" +
+           "    riversideroads3d rr3d\n" +
+           "JOIN \n" +
+           "    riversidecounty rc\n" +
+           "ON \n" +
+           "    geometry_contained_3d(rr3d.geom, rc.lod1solid)\n" +
+           "LIMIT 100;";
+}
+
+@Override
+public String getSelectLineOverlapsBuildings3D() {
+    return "SELECT \n" +
+           "    rr3d.fid AS road_id,\n" +
+           "    rc.ogc_fid AS california_gml_id\n" +
+           "FROM \n" +
+           "    riversideroads3d rr3d\n" +
+           "JOIN \n" +
+           "    riversidecounty rc\n" +
+           "ON \n" +
+           "    geometry_overlaps_3d(rr3d.geom, rc.lod1solid)\n" +
+           "LIMIT 100;";
+}
+
+
+
+
+/*        ending of line query                               */
 
 
 /*@Override

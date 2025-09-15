@@ -394,7 +394,7 @@ public class SpatialSqlDialectForOracle3DNew implements SpatialSqlDialect3D {
 
 
 	@Override
-	public String getSelectLineOverlapsLine3Dvs3D() {
+	public String getSelectArealmIntersectsBuildings3Dvs3D() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -501,6 +501,430 @@ public class SpatialSqlDialectForOracle3DNew implements SpatialSqlDialect3D {
 	public String getSelectBuildingFullyWithinArea3d() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+
+	@Override
+	public String getSelectLineOverlapsLine3Dvs3DLine() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getSelectBuildingFullyWithinArea3DLine() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getSelectBuildingIntersectionArea3Dvs3DLine() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getSelectBuildingsDifferenceArea3Dvs3DLine() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getClosestPointAreaQueryLine() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getBuilding3DIntersectsLineQuery() {
+	    return "SET TIMING ON;\n" +
+	           "SELECT /*+ INDEX(a ROADS_GEOMETRY_IDX) INDEX(b BUILDINGS_GEOMETRY_IDX) */\n" +
+	           "       a.FID AS road_id,\n" +
+	           "       b.ID AS building_id,\n" +
+	           "       1 AS touches\n" +
+	           "FROM roads_3d_new a, buildings3d b\n" +
+	           "WHERE SDO_TOUCH(a.geometry, b.geometry) = 'TRUE';\n" +
+	           "SET TIMING OFF;";
+	}
+
+
+
+	@Override
+	public String getLongestLineAreaQueryLine() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getLineInterpolatePointAreaQueryLine() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getSelectAreaContainsBuildings3D() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getSelectLineIsContainedBuilding3D() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getSelectLineOverlapsBuildings3D() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getSelectArealmOverlapsBuildings3D() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getBuilding3DIntersectsAreaQuery() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getBuilding3DDistanceLineQuery() {
+	    return "SET TIMING ON;\n" +
+	           "SELECT /*+ INDEX(a ROADS_GEOMETRY_IDX) INDEX(b BUILDINGS_GEOMETRY_IDX) */\n" +
+	           "       a.FID AS road_id,\n" +
+	           "       b.ID AS building_id,\n" +
+	           "       SDO_GEOM.SDO_DISTANCE(a.geometry, b.geometry, 0.005) AS distance\n" +
+	           "FROM roads_3d_new a, buildings3d b\n" +
+	           "WHERE SDO_WITHIN_DISTANCE(\n" +
+	           "    a.geometry,\n" +
+	           "    b.geometry,\n" +
+	           "    'distance=10 unit=meter'\n" +
+	           ") = 'TRUE';\n" +
+	           "SET TIMING OFF;";
+	}
+
+
+
+	@Override
+	public String getBuilding3DDistanceAreaQuery() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public String getBuilding3DDistanceWithinBuildingQuery() {
+	    return "SET TIMING ON;\n" +
+	           "SELECT\n" +
+	           "  a.id as id_a,\n" +
+	           "  b.id as id_b,\n" +
+	           "  a.gml_id as gml_id_a,\n" +
+	           "  b.gml_id as gml_id_b\n" +
+	           "FROM buildings3d a\n" +
+	           "JOIN buildings3d b ON a.id < b.id\n" +
+	           "WHERE SDO_WITHIN_DISTANCE(a.geometry, b.geometry, 'distance=10 unit=METER') = 'TRUE';\n" +
+	           "SET TIMING OFF;";
+	}
+
+
+	@Override
+	public String getBoundingBox3DQuery() {
+	    return "SET TIMING ON;\n" +
+	           "SELECT id, SDO_GEOM.SDO_MBR(geometry) AS bounding_box_3d FROM arealm3d;\n" +
+	           "SET TIMING OFF;";
+	}
+
+
+
+	@Override
+	public String getConvexHullQuery() {
+	    return "SET TIMING ON;\n" +
+	           "SELECT id, SDO_GEOM.SDO_CONVEXHULL(geometry, 0.005) AS convex_hull FROM arealm3d;\n" +
+	           "SET TIMING OFF;";
+	}
+
+	@Override
+	public String getDimensionsQuery() {
+	    return "SET TIMING ON;\n" +
+	           "\n" +
+	           "SELECT DISTINCT t.geometry.SDO_GTYPE/1000 as dimensions\n" +
+	           "FROM arealm3d t;\n" +
+	           "\n" +
+	           "SET TIMING OFF;";
+	}
+
+
+	@Override
+	public String getLength3DQuery() {
+	    return "SET TIMING ON;\n" +
+	           "SELECT SDO_GEOM.SDO_LENGTH(geometry, 0.005) as length_3d FROM arealm3d;\n" +
+	           "SET TIMING OFF;";
+	}
+
+
+	@Override
+	public String getPerimeter3DQuery() {
+	    return "SET TIMING ON;\n" +
+	           "SELECT SDO_GEOM.SDO_LENGTH(geometry, 0.005) as perimeter_3d FROM arealm3d;\n" +
+	           "SET TIMING OFF;";
+	}
+
+
+
+	@Override
+	public String getBridgeAnalysisQuery() {
+	    return "SET TIMING ON\n" +
+	           "BEGIN DBMS_RANDOM.SEED(12345); END;\n" +
+	           "/\n" +
+	           "WITH selected_points AS (\n" +
+	           "    SELECT /*+ SAMPLE(1) */ id, geometry\n" +
+	           "    FROM buildings3d\n" +
+	           "    WHERE ROWNUM <= 100\n" +
+	           "),\n" +
+	           "bridge_analysis AS (\n" +
+	           "    SELECT s.id,\n" +
+	           "           COUNT(*) as connection_points,\n" +
+	           "           MAX(SDO_GEOM.SDO_DISTANCE(\n" +
+	           "               SDO_CS.MAKE_3D(b.geometry, 75),\n" +
+	           "               SDO_CS.MAKE_3D(s.geometry, 75),\n" +
+	           "               0.005,\n" +
+	           "               'unit=meter'\n" +
+	           "           )) as bridge_span\n" +
+	           "    FROM buildings3d b\n" +
+	           "    JOIN selected_points s ON SDO_WITHIN_DISTANCE(\n" +
+	           "        b.geometry,\n" +
+	           "        s.geometry,\n" +
+	           "        'distance=100 unit=meter'\n" +
+	           "    ) = 'TRUE'\n" +
+	           "    WHERE b.id != s.id\n" +
+	           "    GROUP BY s.id\n" +
+	           ")\n" +
+	           "SELECT id, connection_points, bridge_span\n" +
+	           "FROM bridge_analysis\n" +
+	           "WHERE connection_points > 5\n" +
+	           "ORDER BY bridge_span DESC\n" +
+	           "FETCH FIRST 5 ROWS ONLY;";
+	}
+	
+
+
+	@Override
+	public String getCancerousAnalysisIntersectionQuery() {
+	    return "SET TIMING ON;\n" +
+	           "SELECT a.ROWID as cell1_id,\n" +
+	           "       b.ROWID as cell2_id,\n" +
+	           "       CASE WHEN SDO_GEOM.RELATE(a.geometry, 'ANYINTERACT', b.geometry, 0.005) = 'TRUE'\n" +
+	           "            THEN 1\n" +
+	           "            ELSE 0\n" +
+	           "       END AS intersection_3d\n" +
+	           "FROM synthetic_cells a, synthetic_cells b\n" +
+	           "WHERE a.ROWID < b.ROWID\n" +
+	           "  AND SDO_WITHIN_DISTANCE(a.geometry, b.geometry, 'distance=10') = 'TRUE'\n" +
+	           "  AND ROWNUM <= 10000;\n" +
+	           "SET TIMING OFF;";
+	}
+
+
+
+	@Override
+	public String getEmergencyRoutesQuery() {
+	    return "EXPLAIN ANALYZE\n" +
+	           "SET AUTOTRACE ON EXPLAIN STAT\n" +
+	           "SET TIMING ON\n" +
+	           "BEGIN DBMS_RANDOM.SEED(12345); END;\n" +
+	           "/\n" +
+	           "WITH selected_points AS (\n" +
+	           "    SELECT /*+ SAMPLE(1) */ id, geometry\n" +
+	           "    FROM buildings3d\n" +
+	           "    WHERE ROWNUM <= 50\n" +
+	           "),\n" +
+	           "route_analysis AS (\n" +
+	           "    SELECT s.id,\n" +
+	           "           COUNT(*) as building_density,\n" +
+	           "           MAX(SDO_GEOM.SDO_DISTANCE(\n" +
+	           "               r.geometry,\n" +
+	           "               s.geometry,\n" +
+	           "               0.005,\n" +
+	           "               'unit=meter'\n" +
+	           "           )) as clearance_radius\n" +
+	           "    FROM buildings3d r\n" +
+	           "    JOIN selected_points s ON SDO_WITHIN_DISTANCE(\n" +
+	           "        r.geometry,\n" +
+	           "        s.geometry,\n" +
+	           "        'distance=100 unit=meter'\n" +
+	           "    ) = 'TRUE'\n" +
+	           "    WHERE r.id != s.id\n" +
+	           "    GROUP BY s.id\n" +
+	           ")\n" +
+	           "SELECT id, building_density, clearance_radius\n" +
+	           "FROM route_analysis\n" +
+	           "ORDER BY building_density ASC, clearance_radius DESC\n" +
+	           "FETCH FIRST 5 ROWS ONLY;";
+	}
+
+
+
+	@Override
+	public String getFutureExpansionQuery() {
+	    return "EXPLAIN ANALYZE\n" +
+	           "SET AUTOTRACE ON EXPLAIN STAT\n" +
+	           "SET TIMING ON\n" +
+	           "BEGIN DBMS_RANDOM.SEED(12345); END;\n" +
+	           "/\n" +
+	           "WITH selected_points AS (\n" +
+	           "    SELECT /*+ SAMPLE(1) */ id, geometry\n" +
+	           "    FROM buildings3d\n" +
+	           "    WHERE ROWNUM <= 100\n" +
+	           "),\n" +
+	           "expansion_analysis AS (\n" +
+	           "    SELECT s.id,\n" +
+	           "           COUNT(*) as building_density,\n" +
+	           "           MIN(SDO_GEOM.SDO_DISTANCE(\n" +
+	           "               r.geometry,\n" +
+	           "               s.geometry,\n" +
+	           "               0.005,\n" +
+	           "               'unit=meter'\n" +
+	           "           )) as distance_to_nearest,\n" +
+	           "           AVG(SDO_GEOM.SDO_DISTANCE(\n" +
+	           "               r.geometry,\n" +
+	           "               s.geometry,\n" +
+	           "               0.005,\n" +
+	           "               'unit=meter'\n" +
+	           "           )) as avg_distance\n" +
+	           "    FROM buildings3d r\n" +
+	           "    JOIN selected_points s ON SDO_WITHIN_DISTANCE(\n" +
+	           "        r.geometry,\n" +
+	           "        s.geometry,\n" +
+	           "        'distance=500 unit=meter'\n" +
+	           "    ) = 'TRUE'\n" +
+	           "    WHERE r.id != s.id\n" +
+	           "    GROUP BY s.id\n" +
+	           ")\n" +
+	           "SELECT id, building_density, distance_to_nearest, avg_distance\n" +
+	           "FROM expansion_analysis\n" +
+	           "WHERE building_density < 50\n" +
+	           "ORDER BY building_density ASC, avg_distance DESC\n" +
+	           "FETCH FIRST 5 ROWS ONLY;";
+	}
+
+
+	@Override
+	public String getGardenAnalysisQuery() {
+	    return "SET TIMING ON\n" +
+	           "BEGIN DBMS_RANDOM.SEED(12345); END;\n" +
+	           "/\n" +
+	           "WITH selected_points AS (\n" +
+	           "    SELECT /*+ SAMPLE(1) */ id, geometry\n" +
+	           "    FROM buildings3d\n" +
+	           "    WHERE ROWNUM <= 100\n" +
+	           "),\n" +
+	           "garden_analysis AS (\n" +
+	           "    SELECT s.id,\n" +
+	           "           COUNT(*) as space_score,\n" +
+	           "           MIN(SDO_GEOM.SDO_DISTANCE(\n" +
+	           "               SDO_CS.MAKE_3D(b.geometry, 100),\n" +
+	           "               SDO_CS.MAKE_3D(s.geometry, 100),\n" +
+	           "               0.005,\n" +
+	           "               'unit=meter'\n" +
+	           "           )) as clear_space\n" +
+	           "    FROM buildings3d b\n" +
+	           "    JOIN selected_points s ON SDO_WITHIN_DISTANCE(\n" +
+	           "        b.geometry,\n" +
+	           "        s.geometry,\n" +
+	           "        'distance=150 unit=meter'\n" +
+	           "    ) = 'TRUE'\n" +
+	           "    WHERE b.id != s.id\n" +
+	           "    GROUP BY s.id\n" +
+	           ")\n" +
+	           "SELECT id, space_score, clear_space\n" +
+	           "FROM garden_analysis\n" +
+	           "ORDER BY clear_space DESC\n" +
+	           "FETCH FIRST 5 ROWS ONLY;\n" +
+	           "SET TIMING OFF;";
+	}
+
+
+
+	@Override
+	public String getLength3DMedicalAnalysisQuery() {
+	    return "SET TIMING ON;\n" +
+	           "SELECT ROWID, SDO_GEOM.SDO_LENGTH(geometry, 0.005) AS perimeter_3d FROM synthetic_cells;\n" +
+	           "SET TIMING OFF;";
+	}
+
+
+	@Override
+	public String getPerimeter3DMedicalAnalysisQuery() {
+	    return "EXPLAIN ANALYZE SELECT \n" +
+	           " ogc_fid,\n" +
+	           " ST_3DLength(wkb_geometry) AS perimeter_3d\n" +
+	           "FROM \n" +
+	           " synthetic_cells_3d;";
+	}
+
+
+	@Override
+	public String getSubwayStationLocationQuery() {
+	    return "BEGIN DBMS_RANDOM.SEED(12345); END;\n" +
+	           "/\n" +
+	           "SET TIMING ON\n" +
+	           "WITH selected_points AS (\n" +
+	           "    SELECT /*+ SAMPLE(1) */ id, geometry\n" +
+	           "    FROM buildings3d\n" +
+	           "    WHERE ROWNUM <= 100\n" +
+	           "),\n" +
+	           "subway_analysis AS (\n" +
+	           "    SELECT s.id,\n" +
+	           "           COUNT(*) as population_density,\n" +
+	           "           MIN(SDO_GEOM.SDO_DISTANCE(\n" +
+	           "               b.geometry,\n" +
+	           "               s.geometry,\n" +
+	           "               0.005,\n" +
+	           "               'unit=meter'\n" +
+	           "           )) as min_distance_meters\n" +
+	           "    FROM buildings3d b\n" +
+	           "    JOIN selected_points s ON SDO_WITHIN_DISTANCE(\n" +
+	           "        b.geometry,\n" +
+	           "        s.geometry,\n" +
+	           "        'distance=25 unit=meter'\n" +
+	           "    ) = 'TRUE'\n" +
+	           "    WHERE b.id != s.id\n" +
+	           "    GROUP BY s.id\n" +
+	           ")\n" +
+	           "SELECT id, population_density, min_distance_meters\n" +
+	           "FROM subway_analysis\n" +
+	           "ORDER BY population_density DESC, min_distance_meters\n" +
+	           "FETCH FIRST 5 ROWS ONLY;\n" +
+	           "SET TIMING OFF;";
 	}
 
 

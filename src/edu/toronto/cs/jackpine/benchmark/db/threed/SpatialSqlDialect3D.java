@@ -4,7 +4,7 @@ import edu.toronto.cs.jackpine.benchmark.db.SpatialSqlDialect.SupportedSqlDialec
 
 public interface SpatialSqlDialect3D {
 	
-	public static  enum SupportedSqlDialect {PostgreSQL, SQLServer, Oracle };
+	public static  enum SupportedSqlDialect {PostgreSQL, SQLServer, Oracle, SpatiaLite };
 	
 	public SupportedSqlDialect getSqlDialectType();
 	
@@ -74,7 +74,7 @@ public interface SpatialSqlDialect3D {
 
 		String getSelectBodyOverlapsBody();
 
-		public	String getSelectLineOverlapsLine3Dvs3D();
+		public	String getSelectArealmIntersectsBuildings3Dvs3D();
 
 		public String getSelect3DLineEqualsLinevs3D();
 
@@ -101,6 +101,64 @@ public interface SpatialSqlDialect3D {
 		public String getSelectBuildingIntersectionArea3Dvs3D();
 
 		String getSelectBuildingFullyWithinArea3d();
+
+		String getSelectLineOverlapsLine3Dvs3DLine();
+
+		String getSelectBuildingFullyWithinArea3DLine();
+
+		String getSelectBuildingIntersectionArea3Dvs3DLine();
+
+		String getSelectBuildingsDifferenceArea3Dvs3DLine();
+
+		String getClosestPointAreaQueryLine();
+
+		String getBuilding3DIntersectsLineQuery();
+		
+		String getBuilding3DIntersectsAreaQuery();
+
+		String getLongestLineAreaQueryLine();
+
+		String getLineInterpolatePointAreaQueryLine();
+
+		String getSelectAreaContainsBuildings3D();
+
+		String getSelectLineIsContainedBuilding3D();
+
+		String getSelectLineOverlapsBuildings3D();
+
+		String getSelectArealmOverlapsBuildings3D();
+
+		public String getBuilding3DDistanceLineQuery();
+
+		public String getBuilding3DDistanceAreaQuery();
+
+		public String getBuilding3DDistanceWithinBuildingQuery();
+
+		public String getBoundingBox3DQuery();
+
+		public String getConvexHullQuery();
+
+		public String getDimensionsQuery();
+
+		public String getLength3DQuery();
+
+		public String getPerimeter3DQuery();
+
+		public String getBridgeAnalysisQuery();
+
+		public String getCancerousAnalysisIntersectionQuery();
+
+		public String getEmergencyRoutesQuery();
+
+		public String getFutureExpansionQuery();
+
+		public String getGardenAnalysisQuery();
+
+		public String getLength3DMedicalAnalysisQuery();
+
+		public String getPerimeter3DMedicalAnalysisQuery();
+
+		public String getSubwayStationLocationQuery();
 
 //		String getSelectLineLongestLine3D();
     
