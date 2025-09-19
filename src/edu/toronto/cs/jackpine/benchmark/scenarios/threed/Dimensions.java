@@ -59,13 +59,11 @@ public class Dimensions extends SpatialScenarioBase {
             logger.debug("Executing main query: " + pstmt);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    int californiaId = rs.getInt(1);
-                    int californiaGmlId = rs.getInt(2);
-                    String intersectionGeom = rs.getString(3);
+                	int dimensions = rs.getInt(1);  
 
-                    logger.info("Intersection found: California ID: " + californiaId + 
-                                ", California GML ID: " + californiaGmlId + 
-                                ", Intersection Geometry: " + intersectionGeom);
+                  //  logger.info("Intersection found: California ID: " + californiaId + 
+                  //              ", California GML ID: " + californiaGmlId + 
+                  //              ", Intersection Geometry: " + intersectionGeom);
                 }
             }
         } catch (SQLException e) {

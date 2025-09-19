@@ -747,10 +747,10 @@ public String getBoundingBox3DQuery() {
 
 
 
+//In your SpatialSqlDialect3D implementation
 public String getConvexHullQuery() {
-    return "EXPLAIN ANALYZE\n" +
-           "SELECT gid, ST_ConvexHull(geom) AS convex_hull\n" +
-           "FROM landmarkriverside3d;";
+ return "SELECT gid, ST_ConvexHull(geom) AS convex_hull FROM landmarkriverside3d";
+ // Instead of: "EXPLAIN ANALYZE SELECT gid, ST_ConvexHull(geom) AS convex_hull FROM landmarkriverside3d"
 }
 
 

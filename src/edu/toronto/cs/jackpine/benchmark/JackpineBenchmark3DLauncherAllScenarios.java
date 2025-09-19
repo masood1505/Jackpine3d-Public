@@ -2,6 +2,8 @@ package edu.toronto.cs.jackpine.benchmark;
 
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.BoundingBox3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.BridgeAnalysis;
+import edu.toronto.cs.jackpine.benchmark.scenarios.threed.Building3DDistanceLine;
+import edu.toronto.cs.jackpine.benchmark.scenarios.threed.Building3DDistanceWithinBuilding;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.Building3DIntersectsArea;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.Building3DIntersectsLine;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.CancerousAnalysisIntersection;
@@ -46,9 +48,11 @@ public class JackpineBenchmark3DLauncherAllScenarios {
               
                 /*         scenarios to be added here                 */
                 
-                scenarios.add(new Building3DIntersectsLine(properties));
+           //     scenarios.add(new Building3DIntersectsLine(properties));
            //     scenarios.add(new Building3DIntersectsArea(properties)); 
-           //     scenarios.add(new ConvexHull(properties)); 
+           //     scenarios.add(new Building3DDistanceWithinBuilding(properties));
+            
+            scenarios.add(new BridgeAnalysis(properties));
 
                  
             for (Object scenario : scenarios) {

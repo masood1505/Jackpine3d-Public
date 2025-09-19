@@ -10,7 +10,6 @@ import edu.toronto.cs.jackpine.benchmark.scenarios.macroscenario.VisitScenario;
 import java.io.InputStream;
 import java.util.Properties;
 
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,9 +18,19 @@ import java.sql.ResultSet;
  * Oracle spatial DBMS dialect information for 3D queries.
  */
 public class SpatialSqlDialectForOracle3DNew implements SpatialSqlDialect3D {
-    static String SRID = "";
+    private String SRID;
 
-    static {
+    // NEW: Constructor that accepts Properties (recommended)
+    public SpatialSqlDialectForOracle3DNew(Properties props) {
+        this.SRID = props.getProperty("ORACLE_SRID", "").trim();
+        
+        if (this.SRID.isEmpty()) {
+            throw new RuntimeException("ORACLE_SRID property is missing or empty");
+        }
+    }
+
+    // EXISTING: Default constructor for backward compatibility
+    public SpatialSqlDialectForOracle3DNew() {
         try (InputStream input = SpatialSqlDialectForOracle3DNew.class.getClassLoader()
                 .getResourceAsStream("connection_general.properties")) {
             if (input == null) {
@@ -30,6 +39,10 @@ public class SpatialSqlDialectForOracle3DNew implements SpatialSqlDialect3D {
             Properties props = new Properties();
             props.load(input);
             SRID = props.getProperty("ORACLE_SRID", "").trim();
+            
+            if (SRID.isEmpty()) {
+                throw new RuntimeException("ORACLE_SRID property is missing or empty");
+            }
         } catch (Exception e) {
             throw new RuntimeException("Error loading properties", e);
         }
@@ -39,8 +52,6 @@ public class SpatialSqlDialectForOracle3DNew implements SpatialSqlDialect3D {
     public SupportedSqlDialect getSqlDialectType() {
         return SupportedSqlDialect.Oracle;
     }
-    
-    
 
     @Override
     public String getSelectBuffer3D() {
@@ -544,21 +555,6 @@ public class SpatialSqlDialectForOracle3DNew implements SpatialSqlDialect3D {
 	}
 
 
-
-	@Override
-	public String getBuilding3DIntersectsLineQuery() {
-	    return "SET TIMING ON;\n" +
-	           "SELECT /*+ INDEX(a ROADS_GEOMETRY_IDX) INDEX(b BUILDINGS_GEOMETRY_IDX) */\n" +
-	           "       a.FID AS road_id,\n" +
-	           "       b.ID AS building_id,\n" +
-	           "       1 AS touches\n" +
-	           "FROM roads_3d_new a, buildings3d b\n" +
-	           "WHERE SDO_TOUCH(a.geometry, b.geometry) = 'TRUE';\n" +
-	           "SET TIMING OFF;";
-	}
-
-
-
 	@Override
 	public String getLongestLineAreaQueryLine() {
 		// TODO Auto-generated method stub
@@ -613,22 +609,24 @@ public class SpatialSqlDialectForOracle3DNew implements SpatialSqlDialect3D {
 		return null;
 	}
 
+	public String getBuilding3DIntersectsLineQuery() {
+	    return "SELECT /*+ INDEX(a ROADS_GEOMETRY_IDX) INDEX(b BUILDINGS_GEOMETRY_IDX) */ " +
+	           "a.FID AS road_id, " +
+	           "b.ID AS building_id, " +
+	           "1 AS touches " +
+	           "FROM sys.roads_3d_new a, sys.buildings3d b " +
+	           "WHERE SDO_TOUCH(a.geometry, b.geometry) = 'TRUE'";
+	}
 
 
 	@Override
 	public String getBuilding3DDistanceLineQuery() {
-	    return "SET TIMING ON;\n" +
-	           "SELECT /*+ INDEX(a ROADS_GEOMETRY_IDX) INDEX(b BUILDINGS_GEOMETRY_IDX) */\n" +
-	           "       a.FID AS road_id,\n" +
-	           "       b.ID AS building_id,\n" +
-	           "       SDO_GEOM.SDO_DISTANCE(a.geometry, b.geometry, 0.005) AS distance\n" +
-	           "FROM roads_3d_new a, buildings3d b\n" +
-	           "WHERE SDO_WITHIN_DISTANCE(\n" +
-	           "    a.geometry,\n" +
-	           "    b.geometry,\n" +
-	           "    'distance=10 unit=meter'\n" +
-	           ") = 'TRUE';\n" +
-	           "SET TIMING OFF;";
+	    return "SELECT /*+ INDEX(a ROADS_GEOMETRY_IDX) INDEX(b BUILDINGS_GEOMETRY_IDX) */ " +
+	           "a.FID AS road_id, " +
+	           "b.ID AS building_id, " +
+	           "SDO_GEOM.SDO_DISTANCE(a.geometry, b.geometry, 0.005) AS distance " +
+	           "FROM sys.roads_3d_new a, sys.buildings3d b " +
+	           "WHERE SDO_WITHIN_DISTANCE(a.geometry, b.geometry, 'distance=10 unit=meter') = 'TRUE'";
 	}
 
 
@@ -643,50 +641,40 @@ public class SpatialSqlDialectForOracle3DNew implements SpatialSqlDialect3D {
 
 	@Override
 	public String getBuilding3DDistanceWithinBuildingQuery() {
-	    return "SET TIMING ON;\n" +
-	           "SELECT\n" +
-	           "  a.id as id_a,\n" +
-	           "  b.id as id_b,\n" +
-	           "  a.gml_id as gml_id_a,\n" +
-	           "  b.gml_id as gml_id_b\n" +
-	           "FROM buildings3d a\n" +
-	           "JOIN buildings3d b ON a.id < b.id\n" +
-	           "WHERE SDO_WITHIN_DISTANCE(a.geometry, b.geometry, 'distance=10 unit=METER') = 'TRUE';\n" +
-	           "SET TIMING OFF;";
+	    return "SELECT a.id as id_a, " +
+	           "b.id as id_b, " +
+	           "a.gml_id as gml_id_a, " +
+	           "b.gml_id as gml_id_b " +
+	           "FROM sys.buildings3d a " +
+	           "JOIN sys.buildings3d b ON a.id < b.id " +
+	           "WHERE SDO_WITHIN_DISTANCE(a.geometry, b.geometry, 'distance=10 unit=METER') = 'TRUE'";
 	}
-
 
 	@Override
 	public String getBoundingBox3DQuery() {
-	    return "SET TIMING ON;\n" +
-	           "SELECT id, SDO_GEOM.SDO_MBR(geometry) AS bounding_box_3d FROM arealm3d;\n" +
-	           "SET TIMING OFF;";
+	    return "SELECT id, SDO_GEOM.SDO_MBR(geometry) AS bounding_box_3d FROM sys.arealm3d";
 	}
-
 
 
 	@Override
 	public String getConvexHullQuery() {
-	    return "SET TIMING ON;\n" +
-	           "SELECT id, SDO_GEOM.SDO_CONVEXHULL(geometry, 0.005) AS convex_hull FROM arealm3d;\n" +
-	           "SET TIMING OFF;";
+	    return "SELECT id, " +
+	           "SDO_GEOM.SDO_CONVEXHULL(geometry, 0.005) AS convex_hull " +
+	           "FROM sys.arealm3d";
 	}
 
 	@Override
 	public String getDimensionsQuery() {
-	    return "SET TIMING ON;\n" +
-	           "\n" +
-	           "SELECT DISTINCT t.geometry.SDO_GTYPE/1000 as dimensions\n" +
-	           "FROM arealm3d t;\n" +
-	           "\n" +
-	           "SET TIMING OFF;";
+	    return "SELECT DISTINCT t.geometry.SDO_GTYPE/1000 AS dimensions " +
+	           "FROM sys.arealm3d t";
 	}
+
 
 
 	@Override
 	public String getLength3DQuery() {
 	    return "SET TIMING ON;\n" +
-	           "SELECT SDO_GEOM.SDO_LENGTH(geometry, 0.005) as length_3d FROM arealm3d;\n" +
+	           "SELECT SDO_GEOM.SDO_LENGTH(geometry, 0.005) as length_3d FROM sys.arealm3d;\n" +
 	           "SET TIMING OFF;";
 	}
 
@@ -694,7 +682,7 @@ public class SpatialSqlDialectForOracle3DNew implements SpatialSqlDialect3D {
 	@Override
 	public String getPerimeter3DQuery() {
 	    return "SET TIMING ON;\n" +
-	           "SELECT SDO_GEOM.SDO_LENGTH(geometry, 0.005) as perimeter_3d FROM arealm3d;\n" +
+	           "SELECT SDO_GEOM.SDO_LENGTH(geometry, 0.005) as perimeter_3d FROM sys.arealm3d;\n" +
 	           "SET TIMING OFF;";
 	}
 
@@ -702,37 +690,35 @@ public class SpatialSqlDialectForOracle3DNew implements SpatialSqlDialect3D {
 
 	@Override
 	public String getBridgeAnalysisQuery() {
-	    return "SET TIMING ON\n" +
-	           "BEGIN DBMS_RANDOM.SEED(12345); END;\n" +
-	           "/\n" +
-	           "WITH selected_points AS (\n" +
-	           "    SELECT /*+ SAMPLE(1) */ id, geometry\n" +
-	           "    FROM buildings3d\n" +
-	           "    WHERE ROWNUM <= 100\n" +
-	           "),\n" +
-	           "bridge_analysis AS (\n" +
-	           "    SELECT s.id,\n" +
-	           "           COUNT(*) as connection_points,\n" +
-	           "           MAX(SDO_GEOM.SDO_DISTANCE(\n" +
-	           "               SDO_CS.MAKE_3D(b.geometry, 75),\n" +
-	           "               SDO_CS.MAKE_3D(s.geometry, 75),\n" +
-	           "               0.005,\n" +
-	           "               'unit=meter'\n" +
-	           "           )) as bridge_span\n" +
-	           "    FROM buildings3d b\n" +
-	           "    JOIN selected_points s ON SDO_WITHIN_DISTANCE(\n" +
-	           "        b.geometry,\n" +
-	           "        s.geometry,\n" +
-	           "        'distance=100 unit=meter'\n" +
-	           "    ) = 'TRUE'\n" +
-	           "    WHERE b.id != s.id\n" +
-	           "    GROUP BY s.id\n" +
-	           ")\n" +
-	           "SELECT id, connection_points, bridge_span\n" +
-	           "FROM bridge_analysis\n" +
-	           "WHERE connection_points > 5\n" +
-	           "ORDER BY bridge_span DESC\n" +
-	           "FETCH FIRST 5 ROWS ONLY;";
+	    return "BEGIN DBMS_RANDOM.SEED(12345); END; " +
+	           "WITH selected_points AS ( " +
+	           "SELECT /*+ SAMPLE(1) */ id, geometry " +
+	           "FROM buildings3d " +
+	           "WHERE ROWNUM <= 100 " +
+	           "), " +
+	           "bridge_analysis AS ( " +
+	           "SELECT s.id, " +
+	           "COUNT(*) as connection_points, " +
+	           "MAX(SDO_GEOM.SDO_DISTANCE( " +
+	           "SDO_CS.MAKE_3D(b.geometry, 75), " +
+	           "SDO_CS.MAKE_3D(s.geometry, 75), " +
+	           "0.005, " +
+	           "'unit=meter' " +
+	           ")) as bridge_span " +
+	           "FROM buildings3d b " +
+	           "JOIN selected_points s ON SDO_WITHIN_DISTANCE( " +
+	           "b.geometry, " +
+	           "s.geometry, " +
+	           "'distance=100 unit=meter' " +
+	           ") = 'TRUE' " +
+	           "WHERE b.id != s.id " +
+	           "GROUP BY s.id " +
+	           ") " +
+	           "SELECT id, connection_points, bridge_span " +
+	           "FROM bridge_analysis " +
+	           "WHERE connection_points > 5 " +
+	           "ORDER BY bridge_span DESC " +
+	           "FETCH FIRST 5 ROWS ONLY";
 	}
 	
 

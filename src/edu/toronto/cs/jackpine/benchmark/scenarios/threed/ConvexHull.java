@@ -13,7 +13,7 @@ import edu.toronto.cs.jackpine.benchmark.db.threed.SpatialTableHelper3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.SpatialScenarioBase;
 
 public class ConvexHull extends SpatialScenarioBase {
-    private static final Logger logger = Logger.getLogger(ReadSpatialLineOverlapsLine3D.class);
+    private static final Logger logger = Logger.getLogger(ConvexHull.class);
 
     private PreparedStatement[] pstmtArray;
     private Connection conn;
@@ -31,9 +31,13 @@ public class ConvexHull extends SpatialScenarioBase {
         this.conn = helper3D.getConnection();
         SpatialSqlDialect3D dialect = helper3D.getSpatialSqlDialect3D();
 
+        // Get the convex hull query and remove EXPLAIN ANALYZE if present
         String sql = dialect.getConvexHullQuery();
+
+        // Remove EXPLAIN ANALYZE prefix to get actual data results
+        sql = sql.replaceFirst("(?i)^\\s*EXPLAIN\\s+(ANALYZE\\s+)?", "").trim();
+
         pstmtArray = new PreparedStatement[]{conn.prepareStatement(sql)};
-        
         logger.info("Prepared statement created: " + sql);
     }
 
@@ -45,28 +49,35 @@ public class ConvexHull extends SpatialScenarioBase {
 
         // Warm-up run
         logger.info("Executing warm-up run...");
-        PreparedStatement warmupPstmt = pstmtArray[0]; // Use the first prepared statement for warm-up
+        PreparedStatement warmupPstmt = pstmtArray[0];
         try (ResultSet rs = warmupPstmt.executeQuery()) {
-            // Process results if needed; can be empty
+            // Process warm-up results but don't log details
+            while (rs.next()) {
+                // Just consume the results
+            }
         } catch (SQLException e) {
             logger.error("Error executing warm-up query", e);
             throw e;
         }
 
-        // Execute the main query once
-        PreparedStatement pstmt = pstmtArray[0]; // or select a random statement if you have multiple
+        // Execute the main query
+        PreparedStatement pstmt = pstmtArray[0];
         try {
-            logger.debug("Executing main query: " + pstmt);
+            logger.debug("Executing main convex hull query");
             try (ResultSet rs = pstmt.executeQuery()) {
+                int resultCount = 0;
                 while (rs.next()) {
-                    int californiaId = rs.getInt(1);
-                    int californiaGmlId = rs.getInt(2);
-                    String intersectionGeom = rs.getString(3);
+                    // Read the correct columns: gid (int) and convex_hull (geometry as string/bytes)
+                    int gid = rs.getInt("gid");
+                    String convexHull = rs.getString("convex_hull");
 
-                    logger.info("Intersection found: California ID: " + californiaId + 
-                                ", California GML ID: " + californiaGmlId + 
-                                ", Intersection Geometry: " + intersectionGeom);
+                    resultCount++;
+                    if (resultCount <= 5) { // Log first 5 results to avoid spam
+                        logger.info("Convex Hull result - GID: " + gid +
+                                ", Convex Hull geometry length: " + (convexHull != null ? convexHull.length() : 0) + " chars");
+                    }
                 }
+                logger.info("Total convex hull results processed: " + resultCount);
             }
         } catch (SQLException e) {
             logger.error("Error executing main query", e);
@@ -74,9 +85,8 @@ public class ConvexHull extends SpatialScenarioBase {
         }
     }
 
-
     @Override
-    public void cleanup() {
+    public void cleanup() throws Exception {
         if (pstmtArray != null) {
             for (PreparedStatement pstmt : pstmtArray) {
                 try {
@@ -97,4 +107,3 @@ public class ConvexHull extends SpatialScenarioBase {
         }
     }
 }
-

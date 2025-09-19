@@ -23,7 +23,7 @@ public class SpatialSqlDialectFactory {
     public SpatialSqlDialect3D getDialect(String url, Properties props) throws UnsupportedOperationException {
         // First try to determine dialect from DBMS property
         String dbms = props.getProperty("DBMS", "").toLowerCase().trim();
-        
+
         if (!dbms.isEmpty()) {
             logger.info("Using DBMS property: " + dbms);
             switch (dbms) {
@@ -33,7 +33,7 @@ public class SpatialSqlDialectFactory {
                     return new SpatialSqlDialectForPostgreSQL3DNew(props);
                 case "oracle":
                     logger.info("Creating Oracle 3D spatial dialect from DBMS property");
-                    return new SpatialSqlDialectForOracle3DNew();
+                    return new SpatialSqlDialectForOracle3DNew(props); // FIXED: Added props parameter
                 default:
                     logger.warn("Unknown DBMS property value: " + dbms + ". Falling back to URL detection.");
                     break;
@@ -41,20 +41,20 @@ public class SpatialSqlDialectFactory {
         } else {
             logger.info("DBMS property not set, falling back to URL detection");
         }
-        
+
         // Fallback to URL-based detection if DBMS property is not set or unknown
         if (url.startsWith("jdbc:postgresql:")) {
             logger.info("Creating PostgreSQL 3D spatial dialect from URL detection");
             return new SpatialSqlDialectForPostgreSQL3DNew(props);
         } else if (url.startsWith("jdbc:oracle:")) {
             logger.info("Creating Oracle 3D spatial dialect from URL detection");
-            return new SpatialSqlDialectForOracle3DNew();
+            return new SpatialSqlDialectForOracle3DNew(props); // FIXED: Added props parameter
         }
 
         logger.error("No suitable 3D spatial dialect found for URL: " + url + " and DBMS: " + dbms);
         throw new UnsupportedOperationException(
-            "No suitable 3D spatial dialect found for URL: " + url + 
-            " and DBMS: " + dbms + 
+            "No suitable 3D spatial dialect found for URL: " + url +
+            " and DBMS: " + dbms +
             ". Supported DBMS values are: 'postgres', 'oracle'"
         );
     }
