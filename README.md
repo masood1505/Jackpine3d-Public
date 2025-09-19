@@ -290,3 +290,181 @@ javac -cp "lib/*:ojdbc8.jar" edu/toronto/cs/jackpine/benchmark/JackpineBenchmark
 # Run benchmarks
 java -cp ".:lib/*:ojdbc8.jar" edu.toronto.cs.jackpine.benchmark.JackpineBenchmark3DLauncherAllScenarios
 
+6. Oracle Macro Queries and Analysis Queries
+The macro queries and analysis queries for Oracle are provided separately in the datasets folder within the repository. These need to be executed manually and are not run through the Java benchmark code.
+Running Oracle Macro Queries
+# Navigate to the dataset folder in your repository
+cd dataset
+
+# Connect to Oracle database as jackpine user
+sqlplus jackpine/jackpine123@//localhost:1521/xepdb1
+
+-- Execute the macro queries file
+@macro-queries.sql
+
+-- Or run from command line:
+sqlplus jackpine/jackpine123@//localhost:1521/xepdb1 @datasets/macro-queries.sql
+
+-- Exit when done
+exit
+Running Oracle Analysis Queries
+# Navigate to the datasets folder in your repository
+cd datasets
+
+# Connect to Oracle database
+sqlplus jackpine/jackpine123@//localhost:1521/xepdb1
+
+-- Execute the analysis queries file
+@analysis-queries.sql
+
+-- Or run from command line:
+sqlplus jackpine/jackpine123@//localhost:1521/xepdb1 @datasets/analysis-queries.sql
+
+-- To save query output to a file:
+spool analysis_results.txt
+@analysis-queries.sql
+spool off
+
+-- Exit when done
+exit
+# SpatiaLite Installation and Data Import Guide
+
+This guide covers installing SpatiaLite, importing GML and CSV data, and running spatial queries.
+
+## Installation
+
+Install SpatiaLite binary tools:
+```bash
+sudo apt install spatialite-bin
+```
+
+Installation location: `/home/w3kq9/software/spatiallite`
+
+## Database Connection
+
+Connect to your database:
+```bash
+sqlite3 myspatialdb.sqlite
+# or
+spatialite /path/to/your/database.sqlite
+```
+
+## Data Import
+
+### Important Limitations
+⚠️ **SpatiaLite does not accept polyhedral surfaces from GML files**
+- Use CSV files instead for complex geometry types
+- CSV files provide better compatibility with various geometry formats
+
+### GML Import (Basic Polygons Only)
+
+```bash
+# Basic import (may fail with complex geometries)
+ogr2ogr -f "SQLite" -dsco SPATIALITE=YES your_database.sqlite California-06065-000.gml -nln cali_data
+
+# Working version with geometry type specification
+ogr2ogr -f "SQLite" -dsco SPATIALITE=YES your_database.sqlite California-06065-000.gml -nln cali_data -nlt MULTIPOLYGONZ
+```
+
+### Batch GML Import
+
+```bash
+# Create initial database with first file
+ogr2ogr -f "SQLite" -dsco SPATIALITE=YES riverside.sqlite California-06065-000.gml -nln riverside -nlt MULTIPOLYGONZ
+
+# Append additional files (csh/tcsh syntax)
+foreach i ( 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 016 017 018 019 )
+    echo "Importing California-06065-$i.gml..."
+    ogr2ogr -append -f "SQLite" riverside.sqlite California-06065-$i.gml -nln riverside -nlt MULTIPOLYGONZ
+end
+```
+
+### CSV Import (Recommended for Complex Geometries)
+
+```bash
+# Import first CSV file
+ogr2ogr -f "SQLite" -dsco SPATIALITE=YES riverside.sqlite riverside0.csv \
+  -oo GEOM_POSSIBLE_NAMES=WKT \
+  -oo KEEP_GEOM_COLUMNS=NO \
+  -nln buildings \
+  -nlt MULTIPOLYGONZ
+
+# Batch import remaining CSV files (bash syntax)
+for i in {1..19}; do
+    ogr2ogr -f "SQLite" -update -append \
+      -dsco SPATIALITE=YES \
+      -oo GEOM_POSSIBLE_NAMES=WKT \
+      -oo KEEP_GEOM_COLUMNS=NO \
+      -nln buildings \
+      -nlt MULTIPOLYGONZ \
+      riverside.sqlite riverside${i}.csv
+done
+```
+
+### Shapefile Import
+
+```bash
+# Import landmarks shapefile
+spatialite_tool -i -shp tiger_landmarks_3d -d riverside.sqlite -t arealm3dNew -c CP1252
+
+# Import roads shapefile
+spatialite_tool -i -shp tiger_roads_3d_all_local2 -d /home/w3kq9/Desktop/Java-Shapefile-Parser-master/JARs/riverside.sqlite -t roads3d -c CP1252
+```
+
+## Database Operations
+
+### Essential Setup
+**Always load the SpatiaLite extension:**
+```sql
+SELECT load_extension('mod_spatialite');
+```
+
+### Data Inspection
+```sql
+-- Count records
+SELECT COUNT(*) FROM riverside;
+
+-- View sample data
+SELECT * FROM riverside LIMIT 5;
+
+-- List all tables
+.tables
+```
+
+## Important Notes
+
+### File Organization
+- **All dataset files must be in the same directory as the SQLite database**
+- Ensure consistent directory structure for successful imports
+
+### Main Database Location
+```
+/home/w3kq9/Desktop/Java-Shapefile-Parser-master/JARs/riverside.sqlite
+```
+
+## Sample Query with Timing
+
+```sql
+-- Record start time
+WITH start AS (SELECT datetime('now') AS start_time)
+SELECT start_time FROM start;
+
+-- Main spatial query
+SELECT SUM(ST_3DDistance(a.geometry, r.lod1solid)) AS total_distance
+FROM arealm3dNew a
+JOIN riverside r ON ST_Intersects(a.geometry, r.lod1solid);
+
+-- Record end time
+WITH end AS (SELECT datetime('now') AS end_time)
+SELECT end_time FROM end;
+```
+
+### Example Timing Results
+- Start time: 2024-11-12 19:00:13
+- End time: 2024-11-13 00:50:15
+- Duration: ~5 hours 50 minutes
+
+## Additional Resources
+
+- Additional queries are available in: `dataset/spatiallite-queries.sql`
+- Refer to SpatiaLite documentation for advanced spatial operations
