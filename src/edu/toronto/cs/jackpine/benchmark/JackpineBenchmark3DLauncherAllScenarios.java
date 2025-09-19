@@ -48,11 +48,10 @@ public class JackpineBenchmark3DLauncherAllScenarios {
               
                 /*         scenarios to be added here                 */
                 
-           //     scenarios.add(new Building3DIntersectsLine(properties));
+                scenarios.add(new Building3DIntersectsLine(properties));
            //     scenarios.add(new Building3DIntersectsArea(properties)); 
            //     scenarios.add(new Building3DDistanceWithinBuilding(properties));
             
-            scenarios.add(new BridgeAnalysis(properties));
 
                  
             for (Object scenario : scenarios) {
