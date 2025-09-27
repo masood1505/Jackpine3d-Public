@@ -9,7 +9,7 @@ The Jackpine Benchmark 3D is a spatial database performance evaluation framework
 The primary goal is to establish standardized performance testing for 3D spatial operations including building intersections, distance calculations, and geometric analysis queries. The benchmark uses authentic datasets from Riverside county to evaluate each database's capability in processing large-scale 3D building geometries, polyhedral surfaces, and complex spatial relationships under realistic data volumes and query workloads.
 
 
-datasets : https://unbcloud-my.sharepoint.com/:f:/g/personal/w3kq9_unb_ca/ElbXLYvhgm9NnIM4iW_rRy8Be4UCZhbGbtQagWhIBf_JCA
+datasets : https://zenodo.org/records/17215091?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjNlZmJhZjM4LTE1NjQtNGM1YS05N2FlLTNmZjBmN2JiNmE0YyIsImRhdGEiOnt9LCJyYW5kb20iOiJhZjA0MTVhMGFlNTMxNzdmNTIyYjQ2M2M4MWY0M2RmZSJ9.96vp_4WIyxdCxWZ50RD19XslMgRSerZ2c_mUTYVElPZ43WpFcYvmG_khzFoVlO8Gl4t1D8hXydbpBWNfCvnhVQ
 
 1. PostgreSQL Database Setup
 Install PostgreSQL and PostGIS
