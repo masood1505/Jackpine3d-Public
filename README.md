@@ -16,7 +16,7 @@ datasets : https://zenodo.org/records/17215091?token=eyJhbGciOiJIUzUxMiJ9.eyJpZC
 1. PostgreSQL Database Setup
 Install PostgreSQL and PostGIS
 
-# Update package list
+### Update package list
 sudo apt update
 
 # Install PostgreSQL
