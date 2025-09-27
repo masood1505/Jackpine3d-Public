@@ -1,5 +1,14 @@
 Jackpine Benchmark 3D - Complete Setup Guide
 
+# Jackpine Benchmark 3D - Introduction and Goals
+
+## Overview
+
+The Jackpine Benchmark 3D is a spatial database performance evaluation framework designed to compare how different database systems handle complex 3D geospatial data operations. This setup guide provides complete instructions for implementing the benchmark across three major platforms: PostgreSQL with PostGIS, Oracle Spatial, and SpatiaLite, using real-world California county geographic data.
+
+The primary goal is to establish standardized performance testing for 3D spatial operations including building intersections, distance calculations, and geometric analysis queries. The benchmark uses authentic datasets from Riverside county to evaluate each database's capability in processing large-scale 3D building geometries, polyhedral surfaces, and complex spatial relationships under realistic data volumes and query workloads.
+
+
 datasets : https://unbcloud-my.sharepoint.com/:f:/g/personal/w3kq9_unb_ca/ElbXLYvhgm9NnIM4iW_rRy8Be4UCZhbGbtQagWhIBf_JCA
 
 1. PostgreSQL Database Setup
