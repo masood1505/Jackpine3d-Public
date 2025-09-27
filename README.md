@@ -19,36 +19,36 @@ Install PostgreSQL and PostGIS
 ### Update package list
 sudo apt update
 
-# Install PostgreSQL
+### Install PostgreSQL
 sudo apt install postgresql postgresql-contrib
 
-# Install PostGIS extension
+### Install PostGIS extension
 sudo apt install postgis postgresql-14-postgis-3
 
-# Install GDAL tools for data import
+### Install GDAL tools for data import
 sudo apt install gdal-bin
 
-# Start PostgreSQL service
+### Start PostgreSQL service
 sudo systemctl start postgresql
 sudo systemctl enable postgresql
 
 Configure PostgreSQL
-# Edit PostgreSQL configuration
+### Edit PostgreSQL configuration
 sudo nano /home/w3kq9/postgres16/data/postgresql.conf
 
-# Change buffer settings (find and modify):
+### Change buffer settings (find and modify):
 shared_buffers = 2048MB          # Changed from 128MB
 
-# Save and exit
+### Save and exit
 
 Database and User Setup
-# Switch to postgres user
+### Switch to postgres user
 sudo -i -u postgres
 
-# Create the database
+### Create the database
 createdb citymodel
 
-# Connect to database and set password
+### Connect to database and set password
 psql -d citymodel
 -- Set password for postgres user
 ALTER USER postgres WITH PASSWORD '1505';
@@ -63,27 +63,27 @@ SELECT PostGIS_Full_Version();
 -- Exit psql
 \q
 Service Management
-# Start PostgreSQL
+### Start PostgreSQL
 sudo service postgresql start
 
-# Stop PostgreSQL
+### Stop PostgreSQL
 sudo service postgresql stop
 
-# Restart PostgreSQL (after config changes)
+### Restart PostgreSQL (after config changes)
 sudo service postgresql restart
 
-# Check service status
+### Check service status
 sudo service postgresql status
 
 Test Connection
-# Test database connection
+### Test database connection
 psql -h localhost -U postgres -d citymodel
 
-# If successful, you should see:
-# citymodel=#
+### If successful, you should see:
+### citymodel=#
 
 2. Data Import
-# Import Riverside County data (files 0-19)
+### Import Riverside County data (files 0-19)
 for i in {0..19}; do 
     FILE="California-06065-$(printf "%03d" $i).gml"
     if [ -f "$FILE" ]; then 
@@ -98,37 +98,37 @@ for i in {0..19}; do
     fi
 done
 
-# Connect to database
+### Connect to database
 psql -h localhost -U postgres -d citymodel
 
-# Check imported tables
+### Check imported tables
 \dt
 
-# Check record counts
+### Check record counts
 SELECT COUNT(*) FROM sandiegocounty;
 SELECT COUNT(*) FROM riversidenew3d;
 
-# Check spatial reference
+### Check spatial reference
 SELECT Find_SRID('public', 'sandiegocounty', 'wkb_geometry');
 SELECT Find_SRID('public', 'riversidenew3d', 'wkb_geometry');
 
-1. Oracle Database SetupInstall Docker (if not already installed)
+# Oracle Database SetupInstall Docker (if not already installed)
 
-2. # Update package list
+2. ### Update package list
 sudo apt update
 
-# Install Docker
+### Install Docker
 sudo apt install docker.io
 
-# Start and enable Docker
+### Start and enable Docker
 sudo systemctl start docker
 sudo systemctl enable docker
 
-# Add user to docker group (optional, to avoid sudo)
+### Add user to docker group (optional, to avoid sudo)
 sudo usermod -aG docker $USER
-# Log out and back in for group changes to take effect
+### Log out and back in for group changes to take effect
 Deploy Oracle Database Container
-# Pull and run Oracle Database Express Edition
+### Pull and run Oracle Database Express Edition
 docker run -d \
   -p 1521:1521 -p 5500:5500 \
   --name oracle-db \
@@ -137,16 +137,16 @@ docker run -d \
   -e ORACLE_CHARACTERSET=AL32UTF8 \
   container-registry.oracle.com/database/express:latest
 
-# Check container status
+### Check container status
 docker ps
 
-# Wait for database to be ready (may take several minutes)
+### Wait for database to be ready (may take several minutes)
 docker logs oracle-db
 Configure Oracle Database
-# Connect to container
+### Connect to container
 docker exec -it oracle-db bash
 
-# Connect as SYSDBA to main database
+### Connect as SYSDBA to main database
 sqlplus sys/15051505@localhost:1521/XE as sysdba
 -- Verify connection
 SELECT name FROM v$database;
@@ -156,7 +156,7 @@ ALTER USER SYS IDENTIFIED BY "15051505";
 
 -- Exit and connect to PDB
 exit
-# Connect to Pluggable Database (PDB) where tables will be stored
+### Connect to Pluggable Database (PDB) where tables will be stored
 sqlplus sys/15051505@//localhost:1521/xepdb1 as sysdba
 Create Benchmark User and Schema
 -- Create tablespace
@@ -183,38 +183,38 @@ GRANT EXECUTE ON MDSYS.SDO_CS TO jackpine;
 -- Exit SYSDBA
 exit
 Test Connection as Jackpine User
-# Connect as jackpine user
+### Connect as jackpine user
 sqlplus jackpine/jackpine123@//localhost:1521/xepdb1
 
-# Test spatial functionality
+### Test spatial functionality
 SELECT MDSYS.SDO_VERSION FROM DUAL;
 
 -- Exit
 exit
 2. Data Import Setup
 Prepare Java Data Loaders
-# Ensure you have the Oracle JDBC driver
-# Download ojdbc8.jar or ojdbc11.jar and place in your lib directory
+### Ensure you have the Oracle JDBC driver
+### Download ojdbc8.jar or ojdbc11.jar and place in your lib directory
 
-# Compile the data loader classes
+### Compile the data loader classes
 javac -cp "lib/*" JDBCDataLoader1.java
 javac -cp "lib/*" JDBCDataLoader2.java  
 javac -cp "lib/*" JDBCDataLoader3.java
 Import Data Using Java Loaders
-# Run data loaders in sequence
-# Note: Ensure your GML data files are in the correct directory
+### Run data loaders in sequence
+### Note: Ensure your GML data files are in the correct directory
 
-# Load first dataset
+### Load first dataset
 java -cp ".:lib/*" JDBCDataLoader1
 
-# Load second dataset
+### Load second dataset
 java -cp ".:lib/*" JDBCDataLoader2
 
-# Load third dataset
+### Load third dataset
 java -cp ".:lib/*" JDBCDataLoader3
 
 Verify Data Import
-# Connect to Oracle as jackpine user
+### Connect to Oracle as jackpine user
 sqlplus jackpine/jackpine123@//localhost:1521/xepdb1
 -- Check tables created by data loaders
 SELECT table_name FROM user_tables;
@@ -233,16 +233,16 @@ SELECT srid FROM mdsys.cs_srs WHERE cs_name LIKE '%8307%';
 -- Exit
 exit
 3. Update Configuration for Oracle
-# Edit configuration file
+### Edit configuration file
 nano connection_general.properties
 ##################################################
-# Set to 'oracle' for Oracle database
+### Set to 'oracle' for Oracle database
 DBMS=oracle
 iterations=1
 maxdistance=1000
 
 #################################################
-# Oracle connection settings
+### Oracle connection settings
 #################################################
 url=jdbc:oracle:thin:@localhost:1521/xepdb1
 user=jackpine
@@ -250,7 +250,7 @@ password=jackpine123
 ORACLE_SRID=8307
 
 #################################################
-# PostgreSQL connection settings (commented out)
+### PostgreSQL connection settings (commented out)
 #################################################
 #url=jdbc:postgresql://localhost:5432/citymodel
 #user=postgres
@@ -258,31 +258,31 @@ ORACLE_SRID=8307
 #POSTGRESQL_SRID=4326
 
 4. Database Management Commands
-# Start Oracle container
+### Start Oracle container
 docker start oracle-db
 
-# Stop Oracle container
+### Stop Oracle container
 docker stop oracle-db
 
-# Restart Oracle container
+### Restart Oracle container
 docker restart oracle-db
 
-# Check container status
+### Check container status
 docker ps -a
 
-# View container logs
+### View container logs
 docker logs oracle-db
 
-# Remove container (if needed to start fresh)
+### Remove container (if needed to start fresh)
 docker rm oracle-db
 Database Connections
-# Connect as SYSDBA to main database
+### Connect as SYSDBA to main database
 sqlplus sys/15051505@localhost:1521/XE as sysdba
 
-# Connect as SYSDBA to PDB (where tables are stored)
+### Connect as SYSDBA to PDB (where tables are stored)
 sqlplus sys/15051505@//localhost:1521/xepdb1 as sysdba
 
-# Connect as jackpine user for benchmarks
+### Connect as jackpine user for benchmarks
 sqlplus jackpine/jackpine123@//localhost:1521/xepdb1
 
 5. Running Benchmarks with Oracle
@@ -295,19 +295,19 @@ scenarios.add(new ConvexHull(properties));
 
 Compile and Run
 
-# Ensure Oracle JDBC driver is in classpath
+### Ensure Oracle JDBC driver is in classpath
 javac -cp "lib/*:ojdbc8.jar" edu/toronto/cs/jackpine/benchmark/JackpineBenchmark3DLauncherAllScenarios.java
 
-# Run benchmarks
+### Run benchmarks
 java -cp ".:lib/*:ojdbc8.jar" edu.toronto.cs.jackpine.benchmark.JackpineBenchmark3DLauncherAllScenarios
 
 6. Oracle Macro Queries and Analysis Queries
 The macro queries and analysis queries for Oracle are provided separately in the datasets folder within the repository. These need to be executed manually and are not run through the Java benchmark code.
 Running Oracle Macro Queries
-# Navigate to the dataset folder in your repository
+### Navigate to the dataset folder in your repository
 cd dataset
 
-# Connect to Oracle database as jackpine user
+### Connect to Oracle database as jackpine user
 sqlplus jackpine/jackpine123@//localhost:1521/xepdb1
 
 -- Execute the macro queries file
@@ -318,11 +318,11 @@ sqlplus jackpine/jackpine123@//localhost:1521/xepdb1 @datasets/macro-queries.sql
 
 -- Exit when done
 exit
-Running Oracle Analysis Queries
-# Navigate to the datasets folder in your repository
+# Running Oracle Analysis Queries
+### Navigate to the datasets folder in your repository
 cd datasets
 
-# Connect to Oracle database
+### Connect to Oracle database
 sqlplus jackpine/jackpine123@//localhost:1521/xepdb1
 
 -- Execute the analysis queries file
@@ -342,7 +342,7 @@ exit
 
 This guide covers installing SpatiaLite, importing GML and CSV data, and running spatial queries.
 
-## Installation
+### Installation
 
 Install SpatiaLite binary tools:
 ```bash
@@ -351,7 +351,7 @@ sudo apt install spatialite-bin
 
 Installation location: `/home/w3kq9/software/spatiallite`
 
-## Database Connection
+### Database Connection
 
 Connect to your database:
 ```bash
@@ -360,7 +360,7 @@ sqlite3 myspatialdb.sqlite
 spatialite /path/to/your/database.sqlite
 ```
 
-## Data Import
+### Data Import
 
 ### Important Limitations
 ⚠️ **SpatiaLite does not accept polyhedral surfaces from GML files**
