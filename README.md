@@ -340,6 +340,11 @@ spool off
 
 -- Exit when done
 exit
+####Macro queries 
+
+A clean and reformated verion of Macro queries have been added to macro-queries(improved).sql
+
+Queries can be be copy pasted from there and executed to the console.
 # SpatiaLite Installation and Data Import Guide
 
 This guide covers installing SpatiaLite, importing GML and CSV data, and running spatial queries.
