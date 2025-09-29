@@ -320,7 +320,7 @@ sqlplus jackpine/jackpine123@//localhost:1521/xepdb1 @datasets/macro-queries.sql
 
 -- Exit when done
 exit
-# Running Oracle Analysis Queries
+# Running Oracle Analysis and Macro Queries
 ### Navigate to the datasets folder in your repository
 cd datasets
 
