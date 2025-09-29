@@ -11,6 +11,8 @@ The primary goal is to establish standardized performance testing for 3D spatial
 
 datasets : https://zenodo.org/records/17215091?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjNlZmJhZjM4LTE1NjQtNGM1YS05N2FlLTNmZjBmN2JiNmE0YyIsImRhdGEiOnt9LCJyYW5kb20iOiJhZjA0MTVhMGFlNTMxNzdmNTIyYjQ2M2M4MWY0M2RmZSJ9.96vp_4WIyxdCxWZ50RD19XslMgRSerZ2c_mUTYVElPZ43WpFcYvmG_khzFoVlO8Gl4t1D8hXydbpBWNfCvnhVQ
 
+For completeness, note that Oracle macro queries, Oracle analysis queries, and all SpatiaLite queries must be executed separately outside the main benchmarking code, while the rest of the benchmark queries can be launched directly from the code framework.
+
 # PostgreSQL Database Setup
 
 1. PostgreSQL Database Setup
