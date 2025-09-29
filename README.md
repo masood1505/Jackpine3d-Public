@@ -340,7 +340,9 @@ spool off
 
 -- Exit when done
 exit
-####Macro queries 
+
+### Macro queries
+
 
 A clean and reformated verion of Macro queries have been added to macro-queries(improved).sql
 
