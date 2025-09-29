@@ -2,6 +2,7 @@ package edu.toronto.cs.jackpine.benchmark;
 
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.BoundingBox3D;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.BridgeAnalysis;
+import edu.toronto.cs.jackpine.benchmark.scenarios.threed.Building3DDistanceArea;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.Building3DDistanceLine;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.Building3DDistanceWithinBuilding;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.Building3DIntersectsArea;
@@ -9,8 +10,13 @@ import edu.toronto.cs.jackpine.benchmark.scenarios.threed.Building3DIntersectsLi
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.CancerousAnalysisIntersection;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.ConvexHull;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.Dimensions;
+import edu.toronto.cs.jackpine.benchmark.scenarios.threed.EmergencyRoutes;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.FutureExpansion;
+import edu.toronto.cs.jackpine.benchmark.scenarios.threed.GardenAnalysis;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.Length3D;
+import edu.toronto.cs.jackpine.benchmark.scenarios.threed.Length3DMedicalAnalysis;
+import edu.toronto.cs.jackpine.benchmark.scenarios.threed.Perimeter3D;
+import edu.toronto.cs.jackpine.benchmark.scenarios.threed.Perimeter3DMedicalAnalysis;
 import edu.toronto.cs.jackpine.benchmark.scenarios.threed.SubwayStationLocation;
 
 import org.apache.log4j.Logger;
@@ -48,10 +54,25 @@ public class JackpineBenchmark3DLauncherAllScenarios {
               
                 /*         scenarios to be added here                 */
                 
-                scenarios.add(new Building3DIntersectsLine(properties));
-           //     scenarios.add(new Building3DIntersectsArea(properties)); 
-           //     scenarios.add(new Building3DDistanceWithinBuilding(properties));
-            
+                  scenarios.add(new Building3DIntersectsLine(properties));
+                  scenarios.add(new Building3DIntersectsArea(properties)); 
+                  scenarios.add(new Building3DDistanceWithinBuilding(properties));
+                  scenarios.add(new Building3DDistanceArea(properties));
+                  scenarios.add(new Building3DDistanceLine(properties));
+                  
+                  scenarios.add(new BoundingBox3D(properties));
+                  scenarios.add(new BridgeAnalysis(properties));
+                  scenarios.add(new CancerousAnalysisIntersection(properties));
+                  scenarios.add(new ConvexHull(properties));
+                  scenarios.add(new Dimensions(properties));
+                  scenarios.add(new EmergencyRoutes(properties));
+                  scenarios.add(new FutureExpansion(properties));
+                  scenarios.add(new GardenAnalysis(properties));
+                  scenarios.add(new Length3D(properties));
+                  scenarios.add(new Length3DMedicalAnalysis(properties));
+                  scenarios.add(new Perimeter3D(properties));
+                  scenarios.add(new Perimeter3DMedicalAnalysis(properties));
+                  scenarios.add(new SubwayStationLocation(properties));                 
 
                  
             for (Object scenario : scenarios) {
